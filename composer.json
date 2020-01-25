@@ -1,0 +1,34 @@
+{
+    "name": "babenkoivan/elastic-scout-driver",
+    "description": "Elasticsearch driver for Laravel Scout",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ivan Babenko",
+            "email": "babenko.i.a@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ElasticScoutDriver\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ElasticScoutDriver\\Tests\\": "tests"
+        }
+    },
+    "require": {
+        "babenkoivan/elastic-client": "dev-master"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "orchestra/testbench": "^4.5",
+        "babenkoivan/elastic-migrations": "dev-master",
+        "babenkoivan/elastic-adapter": "dev-master"
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
