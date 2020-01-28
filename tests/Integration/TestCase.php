@@ -29,6 +29,7 @@ class TestCase extends TestbenchTestCase
         parent::setUp();
 
         $this->loadMigrationsFrom(__DIR__.'/../app/database/migrations');
+        $this->withFactories(__DIR__.'/../app/database/factories');
 
         $this->artisan('migrate')->run();
         $this->artisan('elastic:migrate')->run();
