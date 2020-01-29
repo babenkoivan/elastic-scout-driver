@@ -40,12 +40,17 @@ down: ## Stop containers
 		${MYSQL_CONTAINER_NAME} \
 		${ES_CONTAINER_NAME}
 
-wait: ## Wait until container are ready
-	@echo "→ Waiting for ports to be open:"
-	@for port in ${MYSQL_HOST_PORT} ${ES_HOST_PORT}; do \
-		until nc -z 127.0.0.1 $${port}; do \
-			echo "Waiting for $${port}"; sleep 1; \
-		done \
+wait: ## Wait until containers are ready
+	@echo "→ Waiting for ${MYSQL_CONTAINER_NAME} container:"
+	@until docker exec ${MYSQL_CONTAINER_NAME} mysqladmin -u ${MYSQL_USER} -p${MYSQL_PASSWORD} -h 127.0.0.1 ping; do \
+		echo "✘ ${MYSQL_CONTAINER_NAME} is not ready, waiting..."; \
+		sleep 5; \
+	done
+
+	@echo "→ Waiting for ${ES_CONTAINER_NAME} container:"
+	@until curl -fsS "127.0.0.1:${ES_HOST_PORT}/_cluster/health?wait_for_status=green&timeout=1s"; do \
+		echo "✘ ${ES_CONTAINER_NAME} is not ready, waiting..."; \
+		sleep 5; \
 	done
 
 test: ## Run tests
