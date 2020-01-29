@@ -48,10 +48,11 @@ wait: ## Wait until containers are ready
 	done
 
 	@echo "→ Waiting for ${ES_CONTAINER_NAME} container:"
-	@until curl -fsS "127.0.0.1:${ES_HOST_PORT}/_cluster/health?wait_for_status=green&timeout=1s"; do \
+	@until curl -fsS "\n" "127.0.0.1:${ES_HOST_PORT}/_cluster/health?wait_for_status=green&timeout=1s"; do \
 		echo "✘ ${ES_CONTAINER_NAME} is not ready, waiting..."; \
 		sleep 5; \
 	done
+	@echo
 
 test: ## Run tests
 	@echo "→ Running tests:"
