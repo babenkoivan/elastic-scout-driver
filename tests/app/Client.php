@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ElasticScoutDriver\Tests\app;
 
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
 /**
  * @property int $id
@@ -14,5 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 final class Client extends Model
 {
+    use Searchable;
+
     public $timestamps = false;
 }

@@ -31,8 +31,8 @@ class TestCase extends TestbenchTestCase
         $this->loadMigrationsFrom(__DIR__.'/../app/database/migrations');
         $this->withFactories(__DIR__.'/../app/database/factories');
 
-        $this->artisan('migrate')->run();
-        $this->artisan('elastic:migrate')->run();
+        $this->artisan('migrate:refresh')->run();
+        $this->artisan('elastic:migrate:refresh')->run();
     }
 
     protected function tearDown(): void
