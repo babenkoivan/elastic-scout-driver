@@ -1,6 +1,12 @@
 services:
   - docker
 
+addons:
+  apt:
+    update: true
+    packages:
+      - netcat
+
 cache:
   directories:
     - $HOME/.composer/cache
