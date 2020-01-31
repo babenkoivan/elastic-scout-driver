@@ -48,7 +48,7 @@ wait: ## Wait until containers are ready
 	done
 
 	@echo "→ Waiting for ${ES_CONTAINER_NAME} container:"
-	@until curl -fsS "\n" "127.0.0.1:${ES_HOST_PORT}/_cluster/health?wait_for_status=green&timeout=1s"; do \
+	@until curl -fsS "\n" "127.0.0.1:${ES_HOST_PORT}/_cluster/health?wait_for_status=green&timeout=60s"; do \
 		echo "✘ ${ES_CONTAINER_NAME} is not ready, waiting..."; \
 		sleep 5; \
 	done
@@ -57,8 +57,6 @@ wait: ## Wait until containers are ready
 test: ## Run tests
 	@echo "→ Running tests:"
 	@bin/phpunit --testdox
-
-up-n-test: up wait test ## Start containers and run tests
 
 help: ## Show help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
