@@ -9,6 +9,9 @@ use ElasticScoutDriver\Tests\app\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use Laravel\Scout\Builder;
 
+/**
+ * @covers \ElasticScoutDriver\Factories\ModelFactory
+ */
 final class ModelFactoryTest extends TestCase
 {
     /**
@@ -45,7 +48,7 @@ final class ModelFactoryTest extends TestCase
             ['id' => 1, 'name' => 'John'],
             ['id' => 2, 'name' => 'Martin'],
         ])->map(function (array $fields) {
-           return factory(Client::class)->create($fields);
+            return factory(Client::class)->create($fields);
         });
 
         $builder = new Builder(new Client(), 'test');

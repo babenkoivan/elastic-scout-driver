@@ -20,6 +20,9 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">src</directory>
+            <exclude>
+                <file>src/ServiceProvider.php</file>
+            </exclude>
         </whitelist>
     </filter>
     <php>
