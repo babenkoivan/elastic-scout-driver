@@ -11,6 +11,8 @@ use Laravel\Scout\Builder;
 
 /**
  * @covers \ElasticScoutDriver\Factories\ModelFactory
+ * @uses   \ElasticScoutDriver\Engine
+ * @uses   \ElasticScoutDriver\Factories\DocumentFactory
  */
 final class ModelFactoryTest extends TestCase
 {
@@ -26,7 +28,7 @@ final class ModelFactoryTest extends TestCase
         $this->modelFactory = new ModelFactory();
     }
 
-    public function test_empty_model_collection_can_be_created_from_empty_search_response(): void
+    public function test_empty_model_collection_is_made_from_empty_search_response(): void
     {
         $builder = new Builder(new Client(), 'test');
 
@@ -42,7 +44,7 @@ final class ModelFactoryTest extends TestCase
         $this->assertTrue($models->isEmpty());
     }
 
-    public function test_model_collection_can_be_created_from_not_empty_search_response(): void
+    public function test_model_collection_can_be_made_from_not_empty_search_response(): void
     {
         $clients = collect([
             ['id' => 1, 'name' => 'John'],

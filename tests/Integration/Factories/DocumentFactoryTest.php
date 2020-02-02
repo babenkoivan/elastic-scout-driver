@@ -11,6 +11,7 @@ use Laravel\Scout\Searchable;
 
 /**
  * @covers \ElasticScoutDriver\Factories\DocumentFactory
+ * @uses   \ElasticScoutDriver\Engine
  */
 final class DocumentFactoryTest extends TestCase
 {
@@ -26,14 +27,14 @@ final class DocumentFactoryTest extends TestCase
         $this->documentFactory = new DocumentFactory();
     }
 
-    public function test_documents_can_be_created_from_models(): void
+    public function test_document_collection_can_be_made_from_model_collection(): void
     {
-        $models = factory(Client::class, rand(2, 10))->create();
-        $documents = $this->documentFactory->makeFromModels($models);
+        $clients = factory(Client::class, rand(2, 10))->create();
+        $documents = $this->documentFactory->makeFromModels($clients);
 
-        for ($i = 0; $i < $models->count(); $i++) {
+        for ($i = 0; $i < $clients->count(); $i++) {
             /** @var Searchable $model */
-            $model = $models->get($i);
+            $model = $clients->get($i);
             /** @var Document $document */
             $document = $documents->get($i);
 

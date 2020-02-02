@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ElasticScoutDriver\Tests\app;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Laravel\Scout\Searchable;
 
 /**
@@ -18,4 +19,12 @@ final class Client extends Model
     use Searchable;
 
     public $timestamps = false;
+
+    /**
+     * {@inheritDoc}
+     */
+    public function toSearchableArray()
+    {
+        return Arr::except($this->toArray(), $this->getKeyName());
+    }
 }

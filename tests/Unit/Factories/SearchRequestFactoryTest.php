@@ -26,7 +26,7 @@ final class SearchRequestFactoryTest extends TestCase
         $this->searchRequestFactory = new SearchRequestFactory();
     }
 
-    public function test_search_request_can_be_created_with_empty_query_string(): void
+    public function test_search_request_can_be_made_from_builder_with_empty_query_string(): void
     {
         $builder = new Builder(new Client(), '');
         $searchRequest = $this->searchRequestFactory->makeFromBuilder($builder);
@@ -42,7 +42,7 @@ final class SearchRequestFactoryTest extends TestCase
         ], $searchRequest->toArray());
     }
 
-    public function test_search_request_can_be_created_with_not_empty_query_string(): void
+    public function test_search_request_can_be_made_from_builder_with_not_empty_query_string(): void
     {
         $builder = new Builder(new Client(), 'foo');
         $searchRequest = $this->searchRequestFactory->makeFromBuilder($builder);
@@ -58,7 +58,7 @@ final class SearchRequestFactoryTest extends TestCase
         ], $searchRequest->toArray());
     }
 
-    public function test_search_request_can_be_created_with_filters(): void
+    public function test_search_request_can_be_made_from_builder_with_filters(): void
     {
         $builder = new Builder(new Client(), 'book');
         $builder->where('author_id', 1);
@@ -81,7 +81,7 @@ final class SearchRequestFactoryTest extends TestCase
         ], $searchRequest->toArray());
     }
 
-    public function test_search_request_can_be_created_with_sort(): void
+    public function test_search_request_can_be_made_from_builder_with_sort(): void
     {
         $builder = new Builder(new Client(), 'book');
         $builder->orderBy('price', 'asc');
@@ -104,7 +104,7 @@ final class SearchRequestFactoryTest extends TestCase
         ], $searchRequest->toArray());
     }
 
-    public function test_search_request_can_be_created_with_limit(): void
+    public function test_search_request_can_be_made_from_builder_with_limit(): void
     {
         $builder = new Builder(new Client(), 'book');
         $builder->take(10);
@@ -123,7 +123,7 @@ final class SearchRequestFactoryTest extends TestCase
         ], $searchRequest->toArray());
     }
 
-    public function test_search_request_can_be_created_with_pagination(): void
+    public function test_search_request_can_be_made_from_builder_with_pagination(): void
     {
         $builder = new Builder(new Client(), 'book');
         $builder->take(10);

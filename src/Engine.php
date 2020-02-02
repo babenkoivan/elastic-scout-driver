@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 namespace ElasticScoutDriver;
 
+use ElasticAdapter\Documents\DocumentManager;
+use ElasticScoutDriver\Factories\DocumentFactoryInterface;
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine as AbstractEngine;
+use Laravel\Scout\Searchable;
 
 final class Engine extends AbstractEngine
 {
@@ -12,10 +16,23 @@ final class Engine extends AbstractEngine
      * @var bool
      */
     private $refreshDocuments;
+    /**
+     * @var DocumentManager
+     */
+    private $documentManager;
+    /**
+     * @var DocumentFactoryInterface
+     */
+    private $documentFactory;
 
-    public function __construct()
-    {
+    public function __construct(
+        DocumentManager $documentManager,
+        DocumentFactoryInterface $documentFactory
+    ) {
         $this->refreshDocuments = config('elastic.scout_driver.refresh_documents');
+
+        $this->documentManager = $documentManager;
+        $this->documentFactory = $documentFactory;
     }
 
     /**
@@ -23,7 +40,14 @@ final class Engine extends AbstractEngine
      */
     public function update($models)
     {
-        // TODO: Implement update() method.
+        if ($models->isEmpty()) {
+            return;
+        }
+
+        $index = $models->first()->searchableAs();
+        $documents = $this->documentFactory->makeFromModels($models);
+
+        $this->documentManager->index($index, $documents->all(), $this->refreshDocuments);
     }
 
     /**
