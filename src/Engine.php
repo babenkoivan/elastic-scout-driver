@@ -5,10 +5,8 @@ namespace ElasticScoutDriver;
 
 use ElasticAdapter\Documents\DocumentManager;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
-use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine as AbstractEngine;
-use Laravel\Scout\Searchable;
 
 final class Engine extends AbstractEngine
 {
@@ -55,7 +53,14 @@ final class Engine extends AbstractEngine
      */
     public function delete($models)
     {
-        // TODO: Implement delete() method.
+        if ($models->isEmpty()) {
+            return;
+        }
+
+        $index = $models->first()->searchableAs();
+        $documents = $this->documentFactory->makeFromModels($models);
+
+        $this->documentManager->delete($index, $documents->all(), $this->refreshDocuments);
     }
 
     /**

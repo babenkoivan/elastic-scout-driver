@@ -7,6 +7,7 @@ use ElasticAdapter\Documents\DocumentManager;
 use ElasticAdapter\Search\Hit;
 use ElasticAdapter\Search\SearchRequest;
 use ElasticScoutDriver\Engine;
+use ElasticScoutDriver\Factories\DocumentFactoryInterface;
 use ElasticScoutDriver\Tests\app\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use stdClass as stdClass;
@@ -18,10 +19,6 @@ use stdClass as stdClass;
 final class EngineUpdateTest extends TestCase
 {
     /**
-     * @var Engine
-     */
-    private $engine;
-    /**
      * @var DocumentManager
      */
     private $documentManager;
@@ -30,22 +27,16 @@ final class EngineUpdateTest extends TestCase
     {
         parent::setUp();
 
-        $this->engine = resolve(Engine::class);
         $this->documentManager = resolve(DocumentManager::class);
     }
 
     public function test_empty_model_collection_can_not_be_indexed(): void
     {
-        $clients = (new Client())->newCollection();
+        $documentManager = $this->createMock(DocumentManager::class);
+        $documentManager->expects($this->never())->method('index');
 
-        $this->engine->update($clients);
-
-        $searchResponse = $this->documentManager->search(
-            (new Client())->searchableAs(),
-            new SearchRequest(['match_all' => new stdClass()])
-        );
-
-        $this->assertSame(0, $searchResponse->getHitsTotal());
+        $engine = new Engine($documentManager,  resolve(DocumentFactoryInterface::class));
+        $engine->update((new Client())->newCollection());
     }
 
     public function test_not_empty_model_collection_can_be_indexed(): void
