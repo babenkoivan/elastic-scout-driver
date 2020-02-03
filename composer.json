@@ -31,5 +31,12 @@
     },
     "config": {
         "bin-dir": "bin"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ElasticScoutDriver\\ServiceProvider"
+            ]
+        }
     }
 }
