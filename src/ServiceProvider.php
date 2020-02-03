@@ -5,6 +5,7 @@ namespace ElasticScoutDriver;
 
 use ElasticScoutDriver\Factories\DocumentFactory;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
+use ElasticScoutDriver\Factories\ModelFactory;
 use ElasticScoutDriver\Factories\ModelFactoryInterface;
 use ElasticScoutDriver\Factories\SearchRequestFactory;
 use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
@@ -21,7 +22,7 @@ final class ServiceProvider extends AbstractServiceProvider
      * @var array
      */
     public $bindings = [
-        ModelFactoryInterface::class => ModelFactoryInterface::class,
+        ModelFactoryInterface::class => ModelFactory::class,
         DocumentFactoryInterface::class => DocumentFactory::class,
         SearchRequestFactoryInterface::class => SearchRequestFactory::class,
     ];

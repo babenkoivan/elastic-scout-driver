@@ -4,7 +4,14 @@ declare(strict_types=1);
 namespace ElasticScoutDriver;
 
 use ElasticAdapter\Documents\DocumentManager;
+use ElasticAdapter\Search\Hit;
+use ElasticAdapter\Search\SearchResponse;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
+use ElasticScoutDriver\Factories\ModelFactoryInterface;
+use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection as BaseCollection;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine as AbstractEngine;
 
@@ -22,15 +29,27 @@ final class Engine extends AbstractEngine
      * @var DocumentFactoryInterface
      */
     private $documentFactory;
+    /**
+     * @var SearchRequestFactoryInterface
+     */
+    private $searchRequestFactory;
+    /**
+     * @var ModelFactoryInterface
+     */
+    private $modelFactory;
 
     public function __construct(
         DocumentManager $documentManager,
-        DocumentFactoryInterface $documentFactory
+        DocumentFactoryInterface $documentFactory,
+        SearchRequestFactoryInterface $searchRequestFactory,
+        ModelFactoryInterface $modelFactory
     ) {
         $this->refreshDocuments = config('elastic.scout_driver.refresh_documents');
 
         $this->documentManager = $documentManager;
         $this->documentFactory = $documentFactory;
+        $this->searchRequestFactory = $searchRequestFactory;
+        $this->modelFactory = $modelFactory;
     }
 
     /**
@@ -68,7 +87,10 @@ final class Engine extends AbstractEngine
      */
     public function search(Builder $builder)
     {
-        // TODO: Implement search() method.
+        $index = $builder->model->searchableAs();
+        $searchRequest = $this->searchRequestFactory->makeFromBuilder($builder);
+
+        return $this->documentManager->search($index, $searchRequest);
     }
 
     /**
@@ -80,27 +102,40 @@ final class Engine extends AbstractEngine
     }
 
     /**
-     * {@inheritDoc}
+     * Pluck and return the primary keys of the given results.
+     *
+     * @param  SearchResponse  $results
+     * @return BaseCollection
      */
     public function mapIds($results)
     {
-        // TODO: Implement mapIds() method.
+        return collect($results->getHits())->map(function (Hit $hit) {
+            return $hit->getDocument()->getId();
+        });
     }
 
     /**
-     * {@inheritDoc}
+     * Map the given results to instances of the given model.
+     *
+     * @param  Builder  $builder
+     * @param  SearchResponse  $results
+     * @param  Model  $model
+     * @return EloquentCollection
      */
     public function map(Builder $builder, $results, $model)
     {
-        // TODO: Implement map() method.
+        return $this->modelFactory->makeFromSearchResponse($results, $builder);
     }
 
     /**
-     * {@inheritDoc}
+     * Get the total count from a raw result returned by the engine.
+     *
+     * @param  SearchResponse  $results
+     * @return int
      */
     public function getTotalCount($results)
     {
-        // TODO: Implement getTotalCount() method.
+        return $results->getHitsTotal();
     }
 
     /**

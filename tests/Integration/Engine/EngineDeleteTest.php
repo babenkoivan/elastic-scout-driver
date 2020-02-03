@@ -7,6 +7,8 @@ use ElasticAdapter\Documents\DocumentManager;
 use ElasticAdapter\Search\SearchRequest;
 use ElasticScoutDriver\Engine;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
+use ElasticScoutDriver\Factories\ModelFactoryInterface;
+use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
 use ElasticScoutDriver\Tests\app\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Database\Eloquent\Model;
@@ -35,7 +37,13 @@ final class EngineDeleteTest extends TestCase
         $documentManager = $this->createMock(DocumentManager::class);
         $documentManager->expects($this->never())->method('delete');
 
-        $engine = new Engine($documentManager, resolve(DocumentFactoryInterface::class));
+        $engine = new Engine(
+            $documentManager,
+            resolve(DocumentFactoryInterface::class),
+            resolve(SearchRequestFactoryInterface::class),
+            resolve(ModelFactoryInterface::class)
+        );
+
         $engine->delete((new Client())->newCollection());
     }
 

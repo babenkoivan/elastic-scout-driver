@@ -8,6 +8,8 @@ use ElasticAdapter\Search\Hit;
 use ElasticAdapter\Search\SearchRequest;
 use ElasticScoutDriver\Engine;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
+use ElasticScoutDriver\Factories\ModelFactoryInterface;
+use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
 use ElasticScoutDriver\Tests\app\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use stdClass as stdClass;
@@ -35,7 +37,13 @@ final class EngineUpdateTest extends TestCase
         $documentManager = $this->createMock(DocumentManager::class);
         $documentManager->expects($this->never())->method('index');
 
-        $engine = new Engine($documentManager,  resolve(DocumentFactoryInterface::class));
+        $engine = new Engine(
+            $documentManager,
+            resolve(DocumentFactoryInterface::class),
+            resolve(SearchRequestFactoryInterface::class),
+            resolve(ModelFactoryInterface::class)
+        );
+
         $engine->update((new Client())->newCollection());
     }
 
