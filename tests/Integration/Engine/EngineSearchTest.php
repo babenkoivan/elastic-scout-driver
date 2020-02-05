@@ -35,7 +35,7 @@ final class EngineSearchTest extends TestCase
 
     public function test_models_corresponding_query_string_can_be_found(): void
     {
-        // add some fixtures
+        // add some mixins
         factory(Client::class, rand(2, 10))->create();
 
         $target = factory(Client::class)->create(['name' => 'test']);
@@ -43,5 +43,50 @@ final class EngineSearchTest extends TestCase
 
         $this->assertCount(1, $found);
         $this->assertEquals($target->toArray(), $found->first()->toArray());
+    }
+
+    public function test_search_result_can_be_filtered(): void
+    {
+        // add some mixins
+        factory(Client::class, rand(2, 10))->create();
+
+        $target = factory(Client::class)->create(['phone_number' => '+1234567890']);
+        $found = Client::search()->where('phone_number', $target->phone_number)->get();
+
+        $this->assertCount(1, $found);
+        $this->assertEquals($target->toArray(), $found->first()->toArray());
+    }
+
+    public function test_search_result_can_be_sorted(): void
+    {
+        $source = factory(Client::class, rand(2, 10))->create()->sortBy('email')->values();
+        $found = Client::search()->orderBy('email', 'asc')->get();
+
+        $this->assertEquals($source->toArray(), $found->toArray());
+    }
+
+    public function test_search_result_can_be_limited(): void
+    {
+        factory(Client::class, rand(10, 20))->create();
+
+        $found = Client::search()->take(5)->get();
+
+        $this->assertCount(5, $found);
+    }
+
+    public function test_search_result_can_be_paginated(): void
+    {
+        // add some mixins
+        factory(Client::class, rand(2, 10))->create();
+
+        $target = factory(Client::class, 5)->create(['name' => 'John'])->sortBy('id')->values();
+        $paginator = Client::search($target->first()->name)->orderBy('_id', 'asc')->paginate(2, 'p', 3);
+
+        $this->assertSame(2, $paginator->perPage());
+        $this->assertSame('p', $paginator->getPageName());
+        $this->assertSame(3, $paginator->currentPage());
+        $this->assertSame(5, $paginator->total());
+        $this->assertCount(1, $paginator->items());
+        $this->assertEquals($target->last()->toArray(), $paginator[0]->toArray());
     }
 }
