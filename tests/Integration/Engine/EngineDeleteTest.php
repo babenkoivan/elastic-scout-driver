@@ -57,11 +57,28 @@ final class EngineDeleteTest extends TestCase
         // assert that documents are in the index
         $this->assertSame($clients->count(), $this->documentManager->search($index, $searchAllRequest)->getHitsTotal());
 
-        $clients->each(function (Model $model) {
-            $model->delete();
+        $clients->each(function (Model $client) {
+            $client->delete();
         });
 
         // assert that the index is empty
         $this->assertSame(0, $this->documentManager->search($index, $searchAllRequest)->getHitsTotal());
+    }
+
+    public function test_not_found_error_is_ignored_when_models_are_being_deleted(): void
+    {
+        $clients = factory(Client::class, rand(2, 10))->create();
+
+        // remove models from index
+        $clients->unsearchable();
+
+        $clients->each(function (Model $client) {
+            $client->delete();
+
+            $this->assertDatabaseMissing(
+                $client->getTable(),
+                [$client->getKeyName() => $client->getKey()]
+            );
+        });
     }
 }
