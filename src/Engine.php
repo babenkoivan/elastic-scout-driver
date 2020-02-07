@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine as AbstractEngine;
+use stdClass;
 
 final class Engine extends AbstractEngine
 {
@@ -146,6 +147,9 @@ final class Engine extends AbstractEngine
      */
     public function flush($model)
     {
-        // TODO: Implement flush() method.
+        $index = $model->searchableAs();
+        $query = ['match_all' => new stdClass()];
+
+        $this->documentManager->deleteByQuery($index, $query, $this->refreshDocuments);
     }
 }

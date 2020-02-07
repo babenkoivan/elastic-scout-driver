@@ -77,10 +77,10 @@ final class EngineSearchTest extends TestCase
     public function test_search_result_can_be_paginated(): void
     {
         // add some mixins
-        factory(Client::class, rand(2, 10))->create();
+        factory(Client::class, 6)->create();
 
-        $target = factory(Client::class, 5)->create(['name' => 'John'])->sortBy('id')->values();
-        $paginator = Client::search($target->first()->name)->orderBy('_id', 'asc')->paginate(2, 'p', 3);
+        $target = factory(Client::class, 5)->create(['name' => 'John'])->sortBy('phone_number')->values();
+        $paginator = Client::search($target->first()->name)->orderBy('phone_number', 'asc')->paginate(2, 'p', 3);
 
         $this->assertSame(2, $paginator->perPage());
         $this->assertSame('p', $paginator->getPageName());

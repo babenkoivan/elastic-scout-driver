@@ -20,13 +20,13 @@
         }
     },
     "require": {
-        "babenkoivan/elastic-client": "dev-master"
+        "babenkoivan/elastic-client": "dev-master",
+        "babenkoivan/elastic-adapter": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.5",
         "orchestra/testbench": "^4.5",
         "babenkoivan/elastic-migrations": "dev-master",
-        "babenkoivan/elastic-adapter": "dev-master",
         "laravel/scout": "^7.2"
     },
     "config": {

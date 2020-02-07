@@ -51,18 +51,17 @@ final class EngineDeleteTest extends TestCase
     {
         $clients = factory(Client::class, rand(2, 10))->create();
 
-        $index = $clients->first()->searchableAs();
-        $searchAllRequest = new SearchRequest(['match_all' => new stdClass()]);
-
-        // assert that documents are in the index
-        $this->assertSame($clients->count(), $this->documentManager->search($index, $searchAllRequest)->getHitsTotal());
-
         $clients->each(function (Model $client) {
             $client->delete();
         });
 
+        $searchResponse = $this->documentManager->search(
+            $clients->first()->searchableAs(),
+            new SearchRequest(['match_all' => new stdClass()])
+        );
+
         // assert that the index is empty
-        $this->assertSame(0, $this->documentManager->search($index, $searchAllRequest)->getHitsTotal());
+        $this->assertSame(0, $searchResponse->getHitsTotal());
     }
 
     public function test_not_found_error_is_ignored_when_models_are_being_deleted(): void
@@ -80,5 +79,20 @@ final class EngineDeleteTest extends TestCase
                 [$client->getKeyName() => $client->getKey()]
             );
         });
+    }
+
+    public function test_models_can_be_flushed_from_index(): void
+    {
+        $clients = factory(Client::class, rand(2, 10))->create();
+
+        Client::removeAllFromSearch();
+
+        $searchResponse = $this->documentManager->search(
+            $clients->first()->searchableAs(),
+            new SearchRequest(['match_all' => new stdClass()])
+        );
+
+        // assert that the index is empty
+        $this->assertSame(0, $searchResponse->getHitsTotal());
     }
 }
