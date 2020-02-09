@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
+use ElasticAdapter\Search\SearchResponse;
 use ElasticScoutDriver\Tests\app\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 
@@ -88,5 +89,14 @@ final class EngineSearchTest extends TestCase
         $this->assertSame(5, $paginator->total());
         $this->assertCount(1, $paginator->items());
         $this->assertEquals($target->last()->toArray(), $paginator[0]->toArray());
+    }
+
+    public function test_raw_search_returns_instance_of_search_response(): void
+    {
+        $source = factory(Client::class, rand(2, 10))->create();
+        $foundRaw = Client::search()->raw();
+
+        $this->assertInstanceOf(SearchResponse::class, $foundRaw);
+        $this->assertSame($source->count(), $foundRaw->getHitsTotal());
     }
 }

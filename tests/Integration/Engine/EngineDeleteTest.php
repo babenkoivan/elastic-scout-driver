@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
 use ElasticAdapter\Documents\DocumentManager;
+use ElasticAdapter\Search\Hit;
 use ElasticAdapter\Search\SearchRequest;
 use ElasticScoutDriver\Engine;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
@@ -49,19 +50,31 @@ final class EngineDeleteTest extends TestCase
 
     public function test_not_empty_model_collection_can_be_deleted(): void
     {
-        $clients = factory(Client::class, rand(2, 10))->create();
+        $source = factory(Client::class, rand(6, 10))->create();
 
-        $clients->each(function (Model $client) {
+        $deleted = $source->slice(0, rand(2, 4))->each(function (Model $client) {
             $client->delete();
         });
 
         $searchResponse = $this->documentManager->search(
-            $clients->first()->searchableAs(),
+            $source->first()->searchableAs(),
             new SearchRequest(['match_all' => new stdClass()])
         );
 
-        // assert that the index is empty
-        $this->assertSame(0, $searchResponse->getHitsTotal());
+        // assert that index has less documents
+        $this->assertSame(
+            $source->count() - $deleted->count(),
+            $searchResponse->getHitsTotal()
+        );
+
+        // assert that index doesn't have documents with ids corresponding to the deleted models
+        $documentIds = collect($searchResponse->getHits())->map(function (Hit $hit) {
+            return $hit->getDocument()->getId();
+        })->all();
+
+        $deleted->each(function (Model $client) use ($documentIds) {
+            $this->assertNotContains($client->id, $documentIds);
+        });
     }
 
     public function test_not_found_error_is_ignored_when_models_are_being_deleted(): void
@@ -92,7 +105,7 @@ final class EngineDeleteTest extends TestCase
             new SearchRequest(['match_all' => new stdClass()])
         );
 
-        // assert that the index is empty
+        // assert that index is empty
         $this->assertSame(0, $searchResponse->getHitsTotal());
     }
 }
