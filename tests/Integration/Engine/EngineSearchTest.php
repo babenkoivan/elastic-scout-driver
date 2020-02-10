@@ -99,4 +99,16 @@ final class EngineSearchTest extends TestCase
         $this->assertInstanceOf(SearchResponse::class, $foundRaw);
         $this->assertSame($source->count(), $foundRaw->getHitsTotal());
     }
+
+    public function test_soft_deleted_models_are_not_included_in_search_result(): void
+    {
+        // enable soft deletes
+        $this->app['config']->set('scout.soft_delete', true);
+
+        factory(Client::class, rand(2, 10))->create(['deleted_at' => now()]);
+
+        $found = Client::search()->get();
+
+        $this->assertCount(0, $found);
+    }
 }

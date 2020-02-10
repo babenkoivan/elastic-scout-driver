@@ -68,4 +68,21 @@ final class EngineUpdateTest extends TestCase
 
         $this->assertEquals($clientIds, $documentIds);
     }
+
+    public function test_metadata_is_indexed_when_soft_deletes_are_enabled(): void
+    {
+        // enable soft deletes
+        $this->app['config']->set('scout.soft_delete', true);
+
+        $clients = factory(Client::class, rand(2, 10))->create();
+
+        $searchResponse = $this->documentManager->search(
+            $clients->first()->searchableAs(),
+            new SearchRequest(['match_all' => new stdClass()])
+        );
+
+        collect($searchResponse->getHits())->each(function (Hit $hit) {
+            $this->assertSame(0, $hit->getDocument()->getContent()['__soft_deleted']);
+        });
+    }
 }

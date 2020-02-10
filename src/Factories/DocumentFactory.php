@@ -15,7 +15,14 @@ final class DocumentFactory implements DocumentFactoryInterface
     {
         return $models->map(function (Model $model) {
             /** @var Searchable $model */
-            return new Document((string)$model->getScoutKey(), $model->toSearchableArray());
+            if ($model::usesSoftDelete() && config('scout.soft_delete', false)) {
+                $model->pushSoftDeleteMetadata();
+            }
+
+            return new Document(
+                (string)$model->getScoutKey(),
+                array_merge($model->scoutMetadata(), $model->toSearchableArray())
+            );
         })->toBase();
     }
 }

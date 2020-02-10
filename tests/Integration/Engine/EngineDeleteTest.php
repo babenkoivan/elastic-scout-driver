@@ -33,7 +33,7 @@ final class EngineDeleteTest extends TestCase
         $this->documentManager = resolve(DocumentManager::class);
     }
 
-    public function test_empty_model_collection_can_not_be_deleted(): void
+    public function test_empty_model_collection_can_not_be_deleted_from_index(): void
     {
         $documentManager = $this->createMock(DocumentManager::class);
         $documentManager->expects($this->never())->method('delete');
@@ -48,12 +48,12 @@ final class EngineDeleteTest extends TestCase
         $engine->delete((new Client())->newCollection());
     }
 
-    public function test_not_empty_model_collection_can_be_deleted(): void
+    public function test_not_empty_model_collection_can_be_deleted_from_index(): void
     {
         $source = factory(Client::class, rand(6, 10))->create();
 
         $deleted = $source->slice(0, rand(2, 4))->each(function (Model $client) {
-            $client->delete();
+            $client->forceDelete();
         });
 
         $searchResponse = $this->documentManager->search(
@@ -77,7 +77,7 @@ final class EngineDeleteTest extends TestCase
         });
     }
 
-    public function test_not_found_error_is_ignored_when_models_are_being_deleted(): void
+    public function test_not_found_error_is_ignored_when_models_are_being_deleted_from_index(): void
     {
         $clients = factory(Client::class, rand(2, 10))->create();
 
@@ -85,7 +85,7 @@ final class EngineDeleteTest extends TestCase
         $clients->unsearchable();
 
         $clients->each(function (Model $client) {
-            $client->delete();
+            $client->forceDelete();
 
             $this->assertDatabaseMissing(
                 $client->getTable(),
@@ -107,5 +107,26 @@ final class EngineDeleteTest extends TestCase
 
         // assert that index is empty
         $this->assertSame(0, $searchResponse->getHitsTotal());
+    }
+
+    public function test_models_can_be_soft_deleted_from_index(): void
+    {
+        // enable soft deletes
+        $this->app['config']->set('scout.soft_delete', true);
+
+        $clients = factory(Client::class, rand(2, 10))->create();
+
+        $clients->each(function (Model $client) {
+            $client->delete();
+        });
+
+        $searchResponse = $this->documentManager->search(
+            $clients->first()->searchableAs(),
+            new SearchRequest(['match_all' => new stdClass()])
+        );
+
+        collect($searchResponse->getHits())->each(function (Hit $hit) {
+            $this->assertSame(1, $hit->getDocument()->getContent()['__soft_deleted']);
+        });
     }
 }
