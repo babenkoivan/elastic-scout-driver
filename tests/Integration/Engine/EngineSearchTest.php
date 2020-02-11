@@ -111,4 +111,15 @@ final class EngineSearchTest extends TestCase
 
         $this->assertCount(0, $found);
     }
+
+    public function test_mini_language_syntax_can_be_used_in_query_string(): void
+    {
+        foreach (['Stan', 'John', 'Matthew'] as $name) {
+            factory(Client::class)->create(compact('name'));
+        }
+
+        $found = Client::search('name:(John OR Matthew)')->get();
+
+        $this->assertEquals(['John', 'Matthew'], $found->pluck('name')->all());
+    }
 }
