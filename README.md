@@ -16,13 +16,13 @@ Elasticsearch driver for Laravel Scout.
 
 ## Installation
 
-The library can be installed via Composer:
+The package can be installed via Composer:
 
 ```bash
 composer require babenkoivan/elastic-scout-driver
 ```
 
-Note, that this is package is just a driver for Laravel Scout, you need to install Scout beforehand:
+Note, that this package is just a driver for Laravel Scout, you need to install Scout beforehand:
 ```bash
 composer require laravel/scout
 ``` 
@@ -43,20 +43,20 @@ In case you want to change some settings you should publish the configuration fi
 php artisan vendor:publish --provider="ElasticScoutDriver\ServiceProvider"
 ``` 
 
-This command will create the `elastic.scout_driver.php` file in `config` directory of your project.
+This command will create `elastic.scout_driver.php` file in the `config` directory of your project.
 
 ## Usage
 
 Elastic driver uses Elasticsearch ["Query string"](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html) 
 query wrapped in a ["Bool"](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-bool-query.html) 
-query under the hood. It means that you can use ["mini-language" syntax](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)
-when searching a model:
+query under the hood. It means that you can use ["mini-language"](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)
+syntax when searching a model:
 
 ```php
 $orders = App\Order::search('title:(Star OR Trek)')->get();
 ```
 
-When query string is omitted, the ["Match all"](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-all-query.html) 
+When the query string is omitted, the ["Match all"](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-all-query.html) 
 query is used:
 ```php
 $orders = App\Order::search()->where('user_id', 1)->get();
@@ -67,7 +67,7 @@ for more details and usage examples.
 
 ## Important remarks
 
-There are a few things, which slightly differ from other Scout drivers:
+There are few things, which slightly differ from other Scout drivers:
 * As you probably know, Scout only indexes fields, which are returned by the `toSearchableArray` method. 
 Elastic driver will index a model even if `toSearchableArray` returns an empty array. You can change this behaviour by 
 overwriting the `shouldBeSearchable` method of your model:
@@ -77,7 +77,7 @@ public function shouldBeSearchable()
     return count($this->toSearchableArray()) > 0;
 }
 ```
-* Raw result returns an instance of `SearchResponse` object (see [Elastic Adapter](https://github.com/babenkoivan/elastic-adapter#search) 
+* Raw result returns an instance of `SearchResponse` class (see [Elastic Adapter](https://github.com/babenkoivan/elastic-adapter#search) 
 package):
 ```php
 $searchResponse = App\Order::search('Star Trek')->raw();
