@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace ElasticScoutDriver\Tests\app;
+namespace ElasticScoutDriver\Tests\App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

@@ -10,7 +10,7 @@ use ElasticScoutDriver\Engine;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
 use ElasticScoutDriver\Factories\ModelFactoryInterface;
 use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
-use ElasticScoutDriver\Tests\app\Client;
+use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use stdClass;

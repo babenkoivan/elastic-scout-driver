@@ -5,7 +5,7 @@ namespace ElasticScoutDriver\Tests\Integration\Factories;
 
 use ElasticAdapter\Search\SearchResponse;
 use ElasticScoutDriver\Factories\ModelFactory;
-use ElasticScoutDriver\Tests\app\Client;
+use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use Laravel\Scout\Builder;
 

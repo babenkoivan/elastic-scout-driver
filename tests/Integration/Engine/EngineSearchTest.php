@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
 use ElasticAdapter\Search\SearchResponse;
-use ElasticScoutDriver\Tests\app\Client;
+use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 
 /**
