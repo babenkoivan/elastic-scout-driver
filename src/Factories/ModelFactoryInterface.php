@@ -9,5 +9,5 @@ use Laravel\Scout\Builder;
 
 interface ModelFactoryInterface
 {
-    public function makeFromSearchResponse(SearchResponse $searchResponse, Builder $builder): Collection;
+    public function makeFromSearchResponseUsingBuilder(SearchResponse $searchResponse, Builder $builder): Collection;
 }

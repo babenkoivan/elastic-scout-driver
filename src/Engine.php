@@ -128,7 +128,7 @@ final class Engine extends AbstractEngine
      */
     public function map(Builder $builder, $results, $model)
     {
-        return $this->modelFactory->makeFromSearchResponse($results, $builder);
+        return $this->modelFactory->makeFromSearchResponseUsingBuilder($results, $builder);
     }
 
     /**

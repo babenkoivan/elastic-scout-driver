@@ -39,7 +39,7 @@ final class ModelFactoryTest extends TestCase
             ]
         ]);
 
-        $models = $this->modelFactory->makeFromSearchResponse($searchResponse, $builder);
+        $models = $this->modelFactory->makeFromSearchResponseUsingBuilder($searchResponse, $builder);
 
         $this->assertTrue($models->isEmpty());
     }
@@ -66,7 +66,7 @@ final class ModelFactoryTest extends TestCase
             ]
         ]);
 
-        $models = $this->modelFactory->makeFromSearchResponse($searchResponse, $builder);
+        $models = $this->modelFactory->makeFromSearchResponseUsingBuilder($searchResponse, $builder);
 
         $this->assertCount($clients->count(), $models);
         $this->assertEquals($clients->last()->toArray(), $models->first()->toArray());

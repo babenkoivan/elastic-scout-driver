@@ -11,7 +11,7 @@ use Laravel\Scout\Builder;
 
 final class ModelFactory implements ModelFactoryInterface
 {
-    public function makeFromSearchResponse(SearchResponse $searchResponse, Builder $builder): Collection
+    public function makeFromSearchResponseUsingBuilder(SearchResponse $searchResponse, Builder $builder): Collection
     {
         if ($searchResponse->getHitsTotal() == 0) {
             return $builder->model->newCollection();
