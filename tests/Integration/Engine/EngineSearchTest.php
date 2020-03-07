@@ -39,7 +39,7 @@ final class EngineSearchTest extends TestCase
         // add some mixins
         factory(Client::class, rand(2, 10))->create();
 
-        $target = factory(Client::class)->create(['name' => 'test']);
+        $target = factory(Client::class)->create(['name' => uniqid('John')]);
         $found = Client::search($target->name)->get();
 
         $this->assertCount(1, $found);
@@ -51,7 +51,7 @@ final class EngineSearchTest extends TestCase
         // add some mixins
         factory(Client::class, rand(2, 10))->create();
 
-        $target = factory(Client::class)->create(['phone_number' => '+1234567890']);
+        $target = factory(Client::class)->create(['phone_number' => 'test: +01234567890']);
         $found = Client::search()->where('phone_number', $target->phone_number)->get();
 
         $this->assertCount(1, $found);
@@ -80,8 +80,14 @@ final class EngineSearchTest extends TestCase
         // add some mixins
         factory(Client::class, 6)->create();
 
-        $target = factory(Client::class, 5)->create(['name' => 'John'])->sortBy('phone_number')->values();
-        $paginator = Client::search($target->first()->name)->orderBy('phone_number', 'asc')->paginate(2, 'p', 3);
+        $target = factory(Client::class, 5)
+            ->create(['name' => uniqid('John')])
+            ->sortBy('phone_number')
+            ->values();
+
+        $paginator = Client::search($target->first()->name)
+            ->orderBy('phone_number', 'asc')
+            ->paginate(2, 'p', 3);
 
         $this->assertSame(2, $paginator->perPage());
         $this->assertSame('p', $paginator->getPageName());
