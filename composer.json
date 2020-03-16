@@ -1,6 +1,14 @@
 {
     "name": "babenkoivan/elastic-scout-driver",
     "description": "Elasticsearch driver for Laravel Scout",
+    "keywords": [
+        "scout",
+        "elastic",
+        "elasticsearch",
+        "laravel",
+        "driver",
+        "php"
+    ],
     "type": "library",
     "license": "MIT",
     "authors": [
