@@ -36,7 +36,7 @@
         "phpunit/phpunit": "^8.5",
         "orchestra/testbench": "^5.2",
         "babenkoivan/elastic-migrations": "^1.0",
-        "laravel/scout": "^8.1"
+        "laravel/scout": "^8.0"
     },
     "config": {
         "bin-dir": "bin"
