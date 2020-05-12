@@ -17,12 +17,22 @@ Elasticsearch driver for Laravel Scout.
 
 ## Contents
 
+* [Compatibility](#compatibility)
 * [Installation](#installation) 
 * [Configuration](#configuration)
 * [Basic Usage](#basic-usage)
 * [Advanced Search](#advanced-search)
 * [Migrations](#migrations)
 * [Pitfalls](#pitfalls)
+
+## Compatibility
+
+The current version of Elastic Scout Driver has been tested with the following configuration:
+
+* PHP 7.2-7.4
+* Elasticsearch 7.0-7.6
+* Laravel 6.x-7.x
+* Laravel Scout 7.x-8.x
 
 ## Installation
 
