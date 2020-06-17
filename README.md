@@ -47,7 +47,7 @@ composer require babenkoivan/elastic-scout-driver
 composer require laravel/scout
 ``` 
 
-After Scout installation publish its configuration and change the `driver` option in the `config/scout.php` file to `elastic`:
+When Scout is installed publish its configuration and change the `driver` option in the `config/scout.php` file to `elastic`:
 
 ```bash
 php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
@@ -55,15 +55,24 @@ php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 
 ## Configuration
 
-Elastic driver has only one configuration option at the moment - `refresh_documents`. If it's set to `true` (`false` by default)
-documents are indexed immediately, which might be handy for testing.   
+Elastic Scout Driver uses [babenkoivan/elastic-client](https://github.com/babenkoivan/elastic-client) as a dependency. 
+If you want to change the default client settings (and I'm pretty sure you do), then you need to create the configuration file first:
 
-In case you want to change this setting you should publish the configuration file first:
+```bash
+php artisan vendor:publish --provider="ElasticClient\ServiceProvider"
+```
+
+You can change Elasticsearch host and other client settings in the `config/elastic.client.php` file. 
+Please refer to [babenkoivan/elastic-client](https://github.com/babenkoivan/elastic-client) for more details.
+
+Elastic Scout Driver itself has only one configuration option at the moment - `refresh_documents`. 
+If it's set to `true` (`false` by default) documents are indexed immediately, which might be handy for testing.   
+
+You can configure `refresh_documents` in the `config/elastic.scout_driver.php` file after publishing it with the following command:
+
 ```bash
 php artisan vendor:publish --provider="ElasticScoutDriver\ServiceProvider"
 ``` 
-
-This command will create `elastic.scout_driver.php` file in the `config` directory of your project.
 
 ## Basic usage
 
