@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection as BaseCollection;
 use Laravel\Scout\Searchable;
+use UnexpectedValueException;
 
 final class DocumentFactory implements DocumentFactoryInterface
 {
@@ -23,10 +24,17 @@ final class DocumentFactory implements DocumentFactoryInterface
                 $model->pushSoftDeleteMetadata();
             }
 
-            return new Document(
-                (string)$model->getScoutKey(),
-                array_merge($model->scoutMetadata(), $model->toSearchableArray())
-            );
+            $documentId = (string)$model->getScoutKey();
+            $documentContent = array_merge($model->scoutMetadata(), $model->toSearchableArray());
+
+            if (array_key_exists('_id', $documentContent)) {
+                throw new UnexpectedValueException(sprintf(
+                    '_id is not allowed in the document content. Please, make sure the field is not returned by '.
+                    'the %1$s::toSearchableArray or %1$s::scoutMetadata methods.', class_basename($model)
+                ));
+            }
+
+            return new Document($documentId, $documentContent);
         })->toBase();
     }
 }

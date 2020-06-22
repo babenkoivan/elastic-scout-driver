@@ -62,7 +62,7 @@ If you want to change the default client settings (and I'm pretty sure you do), 
 php artisan vendor:publish --provider="ElasticClient\ServiceProvider"
 ```
 
-You can change Elasticsearch host and other client settings in the `config/elastic.client.php` file. 
+You can change Elasticsearch host and the other client settings in the `config/elastic.client.php` file. 
 Please refer to [babenkoivan/elastic-client](https://github.com/babenkoivan/elastic-client) for more details.
 
 Elastic Scout Driver itself has only one configuration option at the moment - `refresh_documents`. 
@@ -73,6 +73,12 @@ You can configure `refresh_documents` in the `config/elastic.scout_driver.php` f
 ```bash
 php artisan vendor:publish --provider="ElasticScoutDriver\ServiceProvider"
 ``` 
+
+At last, do not forget, that with Scout you can configure the searchable data, the model id and the index name.
+Check [the official Scout documentation](https://laravel.com/docs/master/scout#configuration) for more details.
+
+> Note, that the `_id` field can't be part of the searchable data, so make sure the field is excluded or renamed 
+> in the `toSearchableArray` method in case you are using MongoDB as the database.
 
 ## Basic usage
 
