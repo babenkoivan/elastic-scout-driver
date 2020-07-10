@@ -1,17 +1,15 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver\Tests\Integration\Factories;
 
-use ElasticAdapter\Documents\Document;
 use ElasticScoutDriver\Factories\DocumentFactory;
 use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
-use Laravel\Scout\Searchable;
 use UnexpectedValueException;
 
 /**
  * @covers \ElasticScoutDriver\Factories\DocumentFactory
+ *
  * @uses   \ElasticScoutDriver\Engine
  */
 final class DocumentFactoryTest extends TestCase
@@ -34,9 +32,7 @@ final class DocumentFactoryTest extends TestCase
         $documents = $this->documentFactory->makeFromModels($clients);
 
         for ($i = 0; $i < $clients->count(); $i++) {
-            /** @var Searchable $model */
             $model = $clients->get($i);
-            /** @var Document $document */
             $document = $documents->get($i);
 
             $this->assertSame((string)$model->getScoutKey(), $document->getId());
@@ -49,14 +45,14 @@ final class DocumentFactoryTest extends TestCase
         $this->expectException(UnexpectedValueException::class);
 
         $this->expectExceptionMessage(
-            '_id is not allowed in the document content. Please, make sure the field is not returned '.
+            '_id is not allowed in the document content. Please, make sure the field is not returned ' .
             'by the Client::toSearchableArray or Client::scoutMetadata methods.'
         );
 
         $clients = factory(Client::class, rand(2, 10))->create();
 
         // add restricted _id field in the scout metadata
-        $clients->each(function (Client $client) {
+        $clients->each(static function (Client $client) {
             $client->withScoutMetadata('_id', random_int(0, 1000));
         });
 

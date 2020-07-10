@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
@@ -12,10 +11,11 @@ use ElasticScoutDriver\Factories\ModelFactoryInterface;
 use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
 use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
-use stdClass as stdClass;
+use stdClass;
 
 /**
  * @covers \ElasticScoutDriver\Engine
+ *
  * @uses   \ElasticScoutDriver\Factories\DocumentFactory
  */
 final class EngineUpdateTest extends TestCase
@@ -62,7 +62,7 @@ final class EngineUpdateTest extends TestCase
         // assert that the same model ids are in the index
         $clientIds = $clients->pluck($clients->first()->getKeyName())->all();
 
-        $documentIds = collect($searchResponse->getHits())->map(function (Hit $hit) {
+        $documentIds = collect($searchResponse->getHits())->map(static function (Hit $hit) {
             return $hit->getDocument()->getId();
         })->all();
 

@@ -1,12 +1,11 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 use ElasticScoutDriver\Tests\App\Client;
 use Faker\Generator as Faker;
 use Illuminate\Database\Eloquent\Factory;
 
-/** @var Factory $factory  */
-$factory->define(Client::class, function (Faker $faker) {
+/** @var Factory $factory */
+$factory->define(Client::class, static function (Faker $faker) {
     return [
         'name' => $faker->firstName,
         'last_name' => $faker->lastName,

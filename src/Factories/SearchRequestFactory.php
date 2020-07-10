@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver\Factories;
 
@@ -31,18 +30,18 @@ final class SearchRequestFactory implements SearchRequestFactoryInterface
     protected function makeQuery(Builder $builder): array
     {
         $query = [
-            'bool' => []
+            'bool' => [],
         ];
 
         if (strlen($builder->query) > 0) {
             $query['bool']['must'] = [
                 'query_string' => [
-                    'query' => $builder->query
-                ]
+                    'query' => $builder->query,
+                ],
             ];
         } else {
             $query['bool']['must'] = [
-                'match_all' => new stdClass()
+                'match_all' => new stdClass(),
             ];
         }
 
@@ -55,9 +54,9 @@ final class SearchRequestFactory implements SearchRequestFactoryInterface
 
     protected function makeFilter(Builder $builder): ?array
     {
-        $filter = collect($builder->wheres)->map(function ($value, string $field) {
+        $filter = collect($builder->wheres)->map(static function ($value, string $field) {
             return [
-                'term' => [$field => $value]
+                'term' => [$field => $value],
             ];
         })->values();
 
@@ -66,9 +65,9 @@ final class SearchRequestFactory implements SearchRequestFactoryInterface
 
     protected function makeSort(Builder $builder): ?array
     {
-        $sort = collect($builder->orders)->map(function (array $order) {
+        $sort = collect($builder->orders)->map(static function (array $order) {
             return [
-                $order['column'] => $order['direction']
+                $order['column'] => $order['direction'],
             ];
         });
 

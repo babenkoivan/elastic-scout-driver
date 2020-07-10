@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver\Tests\App;
 
@@ -10,7 +9,7 @@ use Illuminate\Support\Arr;
 use Laravel\Scout\Searchable;
 
 /**
- * @property int $id
+ * @property int    $id
  * @property string $name
  * @property string $last_name
  * @property string $phone_number
@@ -19,16 +18,17 @@ use Laravel\Scout\Searchable;
  */
 final class Client extends Model
 {
-    use Searchable, SoftDeletes;
+    use Searchable;
+    use SoftDeletes;
 
     public $timestamps = false;
 
     protected $hidden = [
-        'deleted_at'
+        'deleted_at',
     ];
 
     /**
-     * {@inheritDoc}
+     * @return array
      */
     public function toSearchableArray()
     {

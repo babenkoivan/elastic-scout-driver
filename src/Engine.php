@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver;
 
@@ -108,12 +107,13 @@ final class Engine extends AbstractEngine
     /**
      * Pluck and return the primary keys of the given results.
      *
-     * @param  SearchResponse  $results
+     * @param SearchResponse $results
+     *
      * @return BaseCollection
      */
     public function mapIds($results)
     {
-        return collect($results->getHits())->map(function (Hit $hit) {
+        return collect($results->getHits())->map(static function (Hit $hit) {
             return $hit->getDocument()->getId();
         });
     }
@@ -121,9 +121,9 @@ final class Engine extends AbstractEngine
     /**
      * Map the given results to instances of the given model.
      *
-     * @param  Builder  $builder
-     * @param  SearchResponse  $results
-     * @param  Model  $model
+     * @param SearchResponse $results
+     * @param Model          $model
+     *
      * @return EloquentCollection
      */
     public function map(Builder $builder, $results, $model)
@@ -134,7 +134,8 @@ final class Engine extends AbstractEngine
     /**
      * Get the total count from a raw result returned by the engine.
      *
-     * @param  SearchResponse  $results
+     * @param SearchResponse $results
+     *
      * @return int
      */
     public function getTotalCount($results)

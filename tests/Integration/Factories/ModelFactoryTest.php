@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver\Tests\Integration\Factories;
 
@@ -11,6 +10,7 @@ use Laravel\Scout\Builder;
 
 /**
  * @covers \ElasticScoutDriver\Factories\ModelFactory
+ *
  * @uses   \ElasticScoutDriver\Engine
  * @uses   \ElasticScoutDriver\Factories\DocumentFactory
  */
@@ -35,8 +35,8 @@ final class ModelFactoryTest extends TestCase
         $searchResponse = new SearchResponse([
             'hits' => [
                 'total' => ['value' => 0],
-                'hits' => []
-            ]
+                'hits' => [],
+            ],
         ]);
 
         $models = $this->modelFactory->makeFromSearchResponseUsingBuilder($searchResponse, $builder);
@@ -49,7 +49,7 @@ final class ModelFactoryTest extends TestCase
         $clients = collect([
             ['id' => 1, 'name' => 'John'],
             ['id' => 2, 'name' => 'Martin'],
-        ])->map(function (array $fields) {
+        ])->map(static function (array $fields) {
             return factory(Client::class)->create($fields);
         });
 
@@ -62,8 +62,8 @@ final class ModelFactoryTest extends TestCase
                     ['_id' => '3', ['_source' => ['name' => 'Bruce']]],
                     ['_id' => '2', ['_source' => ['name' => 'Martin']]],
                     ['_id' => '1', ['_source' => ['name' => 'John']]],
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $models = $this->modelFactory->makeFromSearchResponseUsingBuilder($searchResponse, $builder);

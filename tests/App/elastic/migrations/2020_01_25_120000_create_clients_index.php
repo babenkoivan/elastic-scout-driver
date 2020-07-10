@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 use ElasticAdapter\Indices\Mapping;
 use ElasticAdapter\Indices\Settings;
@@ -10,7 +9,7 @@ final class CreateClientsIndex implements MigrationInterface
 {
     public function up(): void
     {
-        Index::create('clients', function (Mapping $mapping, Settings $settings) {
+        Index::create('clients', static function (Mapping $mapping, Settings $settings) {
             $mapping->text('name');
             $mapping->text('last_name');
             $mapping->keyword('phone_number');

@@ -1,14 +1,15 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
 use ElasticAdapter\Search\SearchResponse;
 use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * @covers \ElasticScoutDriver\Engine
+ *
  * @uses   \ElasticScoutDriver\Factories\DocumentFactory
  * @uses   \ElasticScoutDriver\Factories\ModelFactory
  * @uses   \ElasticScoutDriver\Factories\SearchRequestFactory
@@ -85,6 +86,7 @@ final class EngineSearchTest extends TestCase
             ->sortBy('phone_number')
             ->values();
 
+        /** @var LengthAwarePaginator $paginator */
         $paginator = Client::search($target->first()->name)
             ->orderBy('phone_number', 'asc')
             ->paginate(2, 'p', 3);

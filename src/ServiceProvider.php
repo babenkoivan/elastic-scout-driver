@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver;
 
@@ -34,7 +33,7 @@ final class ServiceProvider extends AbstractServiceProvider
     {
         parent::__construct($app);
 
-        $this->configPath = realpath(__DIR__.'/../config/elastic.scout_driver.php');
+        $this->configPath = dirname(__DIR__) . '/config/elastic.scout_driver.php';
     }
 
     /**
@@ -48,13 +47,16 @@ final class ServiceProvider extends AbstractServiceProvider
         );
     }
 
+    /**
+     * @return void
+     */
     public function boot()
     {
         $this->publishes([
-            $this->configPath => config_path(basename($this->configPath))
+            $this->configPath => config_path(basename($this->configPath)),
         ]);
 
-        resolve(EngineManager::class)->extend('elastic', function () {
+        resolve(EngineManager::class)->extend('elastic', static function () {
             return resolve(Engine::class);
         });
     }

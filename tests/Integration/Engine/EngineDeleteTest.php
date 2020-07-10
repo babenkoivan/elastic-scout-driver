@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
@@ -17,6 +16,7 @@ use stdClass;
 
 /**
  * @covers \ElasticScoutDriver\Engine
+ *
  * @uses   \ElasticScoutDriver\Factories\DocumentFactory
  */
 final class EngineDeleteTest extends TestCase
@@ -52,7 +52,7 @@ final class EngineDeleteTest extends TestCase
     {
         $source = factory(Client::class, rand(6, 10))->create();
 
-        $deleted = $source->slice(0, rand(2, 4))->each(function (Model $client) {
+        $deleted = $source->slice(0, rand(2, 4))->each(static function (Model $client) {
             $client->forceDelete();
         });
 
@@ -68,12 +68,12 @@ final class EngineDeleteTest extends TestCase
         );
 
         // assert that index doesn't have documents with ids corresponding to the deleted models
-        $documentIds = collect($searchResponse->getHits())->map(function (Hit $hit) {
+        $documentIds = collect($searchResponse->getHits())->map(static function (Hit $hit) {
             return $hit->getDocument()->getId();
         })->all();
 
         $deleted->each(function (Model $client) use ($documentIds) {
-            $this->assertNotContains($client->id, $documentIds);
+            $this->assertNotContains($client->getKey(), $documentIds);
         });
     }
 
@@ -116,7 +116,7 @@ final class EngineDeleteTest extends TestCase
 
         $clients = factory(Client::class, rand(2, 10))->create();
 
-        $clients->each(function (Model $client) {
+        $clients->each(static function (Model $client) {
             $client->delete();
         });
 

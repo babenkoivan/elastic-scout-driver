@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver\Factories;
 
@@ -17,17 +16,17 @@ final class ModelFactory implements ModelFactoryInterface
             return $builder->model->newCollection();
         }
 
-        $documentIds = collect($searchResponse->getHits())->map(function (Hit $hit) {
+        $documentIds = collect($searchResponse->getHits())->map(static function (Hit $hit) {
             return $hit->getDocument()->getId();
         })->all();
 
         $documentIdPositions = array_flip($documentIds);
 
         return $builder->model->getScoutModelsByIds($builder, $documentIds)
-            ->filter(function (Model $model) use ($documentIds) {
+            ->filter(static function (Model $model) use ($documentIds) {
                 return in_array($model->getScoutKey(), $documentIds);
             })
-            ->sortBy(function (Model $model) use ($documentIdPositions) {
+            ->sortBy(static function (Model $model) use ($documentIdPositions) {
                 return $documentIdPositions[$model->getScoutKey()];
             })
             ->values();

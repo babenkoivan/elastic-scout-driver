@@ -1,5 +1,4 @@
-<?php
-declare(strict_types=1);
+<?php declare(strict_types=1);
 
 namespace ElasticScoutDriver\Tests\Unit\Factories;
 
@@ -35,10 +34,10 @@ final class SearchRequestFactoryTest extends TestCase
             'query' => [
                 'bool' => [
                     'must' => [
-                        'match_all' => new stdClass()
-                    ]
-                ]
-            ]
+                        'match_all' => new stdClass(),
+                    ],
+                ],
+            ],
         ], $searchRequest->toArray());
     }
 
@@ -51,10 +50,10 @@ final class SearchRequestFactoryTest extends TestCase
             'query' => [
                 'bool' => [
                     'must' => [
-                        'query_string' => ['query' => 'foo']
-                    ]
-                ]
-            ]
+                        'query_string' => ['query' => 'foo'],
+                    ],
+                ],
+            ],
         ], $searchRequest->toArray());
     }
 
@@ -70,14 +69,14 @@ final class SearchRequestFactoryTest extends TestCase
             'query' => [
                 'bool' => [
                     'must' => [
-                        'query_string' => ['query' => 'book']
+                        'query_string' => ['query' => 'book'],
                     ],
                     'filter' => [
                         ['term' => ['author_id' => 1]],
-                        ['term' => ['price' => 60]]
-                    ]
-                ]
-            ]
+                        ['term' => ['price' => 60]],
+                    ],
+                ],
+            ],
         ], $searchRequest->toArray());
     }
 
@@ -93,14 +92,14 @@ final class SearchRequestFactoryTest extends TestCase
             'query' => [
                 'bool' => [
                     'must' => [
-                        'query_string' => ['query' => 'book']
-                    ]
-                ]
+                        'query_string' => ['query' => 'book'],
+                    ],
+                ],
             ],
             'sort' => [
                 ['price' => 'asc'],
-                ['author_id' => 'desc']
-            ]
+                ['author_id' => 'desc'],
+            ],
         ], $searchRequest->toArray());
     }
 
@@ -115,11 +114,11 @@ final class SearchRequestFactoryTest extends TestCase
             'query' => [
                 'bool' => [
                     'must' => [
-                        'query_string' => ['query' => 'book']
-                    ]
-                ]
+                        'query_string' => ['query' => 'book'],
+                    ],
+                ],
             ],
-            'size' => 10
+            'size' => 10,
         ], $searchRequest->toArray());
     }
 
@@ -134,12 +133,12 @@ final class SearchRequestFactoryTest extends TestCase
             'query' => [
                 'bool' => [
                     'must' => [
-                        'query_string' => ['query' => 'book']
-                    ]
-                ]
+                        'query_string' => ['query' => 'book'],
+                    ],
+                ],
             ],
             'from' => 60,
-            'size' => 30
+            'size' => 30,
         ], $searchRequest->toArray());
     }
 }
