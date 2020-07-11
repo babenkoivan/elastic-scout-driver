@@ -36,10 +36,10 @@ jobs:
     - stage: code-analysis
       name: Code Style Check
       php: 7.2
-      env: TESTBENCH_VERSION=^5.0
+      env: TESTBENCH_VERSION=^5.0 SCOUT_VERSION=^8.0
       script: make style-check
     - stage: code-analysis
       name: Static Code Analysis
       php: 7.2
-      env: TESTBENCH_VERSION=^5.0
+      env: TESTBENCH_VERSION=^5.0 SCOUT_VERSION=^8.0
       script: make static-analysis
