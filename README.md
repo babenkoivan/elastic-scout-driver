@@ -53,6 +53,8 @@ When Scout is installed publish its configuration and change the `driver` option
 php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 ```
 
+If you want to use Elastic Scout Driver with [Lumen framework](https://lumen.laravel.com/) check [this guide](https://github.com/babenkoivan/elastic-scout-driver/wiki/Lumen-Installation).
+
 ## Configuration
 
 Elastic Scout Driver uses [babenkoivan/elastic-client](https://github.com/babenkoivan/elastic-client) as a dependency. 
