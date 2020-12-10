@@ -33,6 +33,9 @@ script:
   - ES_VERSION=$ES_VERSION make up wait test
 
 jobs:
+  exclude:
+    - php: 7.2
+      env: ES_VERSION=7.9.3 TESTBENCH_VERSION=^6.0 SCOUT_VERSION=^8.0
   include:
     - stage: code-analysis
       name: Code Style Check

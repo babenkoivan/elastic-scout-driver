@@ -136,7 +136,7 @@ final class Engine extends AbstractEngine
      *
      * @param SearchResponse $results
      *
-     * @return int
+     * @return int|null
      */
     public function getTotalCount($results)
     {
