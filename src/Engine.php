@@ -98,6 +98,7 @@ final class Engine extends AbstractEngine
      */
     public function paginate(Builder $builder, $perPage, $page)
     {
+        $perPage = (int) $perPage;
         $index = $builder->model->searchableAs();
         $searchRequest = $this->searchRequestFactory->makeFromBuilder($builder, compact('perPage', 'page'));
 
