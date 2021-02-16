@@ -43,12 +43,13 @@
         "babenkoivan/elastic-adapter": "dev-php8-support as 1.13"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5",
-        "orchestra/testbench": "^5.2",
-        "babenkoivan/elastic-migrations": "^1.0",
+        "phpunit/phpunit": "^9.5",
+        "orchestra/testbench": "^6.12",
+        "babenkoivan/elastic-migrations": "dev-php8-support as 1.4",
         "laravel/scout": "^8.0",
         "friendsofphp/php-cs-fixer": "^2.16",
-        "phpstan/phpstan": "^0.12.32"
+        "phpstan/phpstan": "^0.12.32",
+        "laravel/legacy-factories": "^1.1"
     },
     "config": {
         "bin-dir": "bin"
