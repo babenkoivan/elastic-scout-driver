@@ -44,7 +44,7 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/spiritinlife/elastic-adapter.git"
+            "url": "https://github.com/spiritinlife/elastic-migrations.git"
         }
     ],
     "minimum-stability" : "dev",
