@@ -40,11 +40,11 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git@github.com:spiritinlife/elastic-adapter.git"
+            "url": "https://github.com/spiritinlife/elastic-adapter.git"
         },
         {
             "type": "vcs",
-            "url": "git@github.com:spiritinlife/elastic-migrations.git"
+            "url": "https://github.com/spiritinlife/elastic-adapter.git"
         }
     ],
     "minimum-stability" : "dev",
