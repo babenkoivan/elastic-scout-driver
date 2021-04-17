@@ -10,6 +10,7 @@ use ElasticScoutDriver\Factories\DocumentFactoryInterface;
 use ElasticScoutDriver\Factories\ModelFactoryInterface;
 use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
 use ElasticScoutDriver\Tests\App\Client;
+use ElasticScoutDriver\Tests\App\ClientWithRouting;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use stdClass;
 
@@ -50,6 +51,28 @@ final class EngineUpdateTest extends TestCase
     public function test_not_empty_model_collection_can_be_indexed(): void
     {
         $clients = factory(Client::class, rand(2, 10))->create();
+
+        $searchResponse = $this->documentManager->search(
+            $clients->first()->searchableAs(),
+            new SearchRequest(['match_all' => new stdClass()])
+        );
+
+        // assert that the amount of created models corresponds number of found documents
+        $this->assertSame($clients->count(), $searchResponse->getHitsTotal());
+
+        // assert that the same model ids are in the index
+        $clientIds = $clients->pluck($clients->first()->getKeyName())->all();
+
+        $documentIds = collect($searchResponse->getHits())->map(static function (Hit $hit) {
+            return $hit->getDocument()->getId();
+        })->all();
+
+        $this->assertEquals($clientIds, $documentIds);
+    }
+
+    public function test_model_collection_with_custom_routing_can_be_indexed(): void
+    {
+        $clients = factory(ClientWithRouting::class, rand(2, 10))->create();
 
         $searchResponse = $this->documentManager->search(
             $clients->first()->searchableAs(),

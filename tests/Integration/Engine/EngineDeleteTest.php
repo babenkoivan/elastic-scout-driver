@@ -10,8 +10,10 @@ use ElasticScoutDriver\Factories\DocumentFactoryInterface;
 use ElasticScoutDriver\Factories\ModelFactoryInterface;
 use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
 use ElasticScoutDriver\Tests\App\Client;
+use ElasticScoutDriver\Tests\App\ClientWithRouting;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Database\Eloquent\Model;
+
 use stdClass;
 
 /**
@@ -51,6 +53,35 @@ final class EngineDeleteTest extends TestCase
     public function test_not_empty_model_collection_can_be_deleted_from_index(): void
     {
         $source = factory(Client::class, rand(6, 10))->create();
+
+        $deleted = $source->slice(0, rand(2, 4))->each(static function (Model $client) {
+            $client->forceDelete();
+        });
+
+        $searchResponse = $this->documentManager->search(
+            $source->first()->searchableAs(),
+            new SearchRequest(['match_all' => new stdClass()])
+        );
+
+        // assert that index has less documents
+        $this->assertSame(
+            $source->count() - $deleted->count(),
+            $searchResponse->getHitsTotal()
+        );
+
+        // assert that index doesn't have documents with ids corresponding to the deleted models
+        $documentIds = collect($searchResponse->getHits())->map(static function (Hit $hit) {
+            return $hit->getDocument()->getId();
+        })->all();
+
+        $deleted->each(function (Model $client) use ($documentIds) {
+            $this->assertNotContains($client->getKey(), $documentIds);
+        });
+    }
+
+    public function test_model_collection_with_custom_routing_can_be_deleted_from_index(): void
+    {
+        $source = factory(ClientWithRouting::class, rand(6, 10))->create();
 
         $deleted = $source->slice(0, rand(2, 4))->each(static function (Model $client) {
             $client->forceDelete();
