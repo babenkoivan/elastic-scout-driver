@@ -82,7 +82,7 @@ php artisan vendor:publish --provider="ElasticScoutDriver\ServiceProvider"
 ``` 
 
 At last, do not forget, that with Scout you can configure the searchable data, the model id and the index name.
-Check [the official Scout documentation](https://laravel.com/docs/master/scout#configuration) for more details.
+Check [the official Scout documentation](https://laravel.com/docs/8.x/scout#configuration) for more details.
 
 > Note, that the `_id` field can't be part of the searchable data, so make sure the field is excluded or renamed 
 > in the `toSearchableArray` method in case you are using MongoDB as the database.
@@ -104,7 +104,7 @@ is used:
 $orders = App\Order::search()->where('user_id', 1)->get();
 ``` 
 
-Please refer to [the official Laravel Scout documentation](https://laravel.com/docs/6.x/scout)
+Please refer to [the official Laravel Scout documentation](https://laravel.com/docs/8.x/scout)
 for more details and usage examples.
 
 ## Advanced Search
