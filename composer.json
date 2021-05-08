@@ -40,23 +40,20 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/spiritinlife/elastic-adapter.git"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/spiritinlife/elastic-migrations.git"
+            "url": "https://github.com/spiritinlife/elastic-scout-driver-plus.git"
         }
     ],
     "minimum-stability" : "dev",
     "require": {
         "php": "^7.2 || ^8.0",
         "babenkoivan/elastic-client": "^1.2",
-        "babenkoivan/elastic-adapter": "dev-master"
+        "babenkoivan/elastic-adapter": "^1.15.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
         "orchestra/testbench": "^6.12",
-        "babenkoivan/elastic-migrations": "dev-master",
+        "babenkoivan/elastic-migrations": "^1.5.0",
+        "babenkoivan/elastic-scout-driver-plus": "dev-master",
         "laravel/scout": "^8.0",
         "friendsofphp/php-cs-fixer": "^2.16",
         "phpstan/phpstan": "^0.12.32",

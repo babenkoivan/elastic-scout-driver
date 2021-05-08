@@ -4,7 +4,6 @@ namespace ElasticScoutDriver\Tests\Integration\Factories;
 
 use ElasticScoutDriver\Factories\DocumentFactory;
 use ElasticScoutDriver\Tests\App\Client;
-use ElasticScoutDriver\Tests\App\ClientWithRouting;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use UnexpectedValueException;
 
@@ -38,21 +37,6 @@ final class DocumentFactoryTest extends TestCase
 
             $this->assertSame((string)$model->getScoutKey(), $document->getId());
             $this->assertSame($model->toSearchableArray(), $document->getContent());
-        }
-    }
-
-    public function test_document_collection_can_be_made_from_model_collection_with_routing(): void
-    {
-        $clients = factory(ClientWithRouting::class, rand(2, 10))->create();
-        $documents = $this->documentFactory->makeFromModels($clients);
-
-        for ($i = 0; $i < $clients->count(); $i++) {
-            $model = $clients->get($i);
-            $document = $documents->get($i);
-
-            $this->assertSame((string)$model->getScoutKey(), $document->getId());
-            $this->assertSame($model->toSearchableArray(), $document->getContent());
-            $this->assertSame($model->getRoutingKey(), $document->getRouting());
         }
     }
 

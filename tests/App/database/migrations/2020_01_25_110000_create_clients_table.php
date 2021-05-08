@@ -17,6 +17,7 @@ class CreateClientsTable extends Migration
             $table->string('last_name');
             $table->string('phone_number');
             $table->string('email');
+            $table->boolean('use_shard_routing');
             $table->softDeletes();
         });
     }

@@ -61,10 +61,12 @@ final class Engine extends AbstractEngine
             return;
         }
 
-        $index = $models->first()->searchableAs();
+        $model = $models->first();
+        $index = $model->searchableAs();
+        $routingPath = in_array('ElasticScoutDriverPlus\ShardRouting', class_uses_recursive($model)) ? $model->getRoutingPath() : null;
         $documents = $this->documentFactory->makeFromModels($models);
 
-        $this->documentManager->index($index, $documents->all(), $this->refreshDocuments);
+        $this->documentManager->index($index, $documents->all(), $this->refreshDocuments, $routingPath);
     }
 
     /**
@@ -76,10 +78,12 @@ final class Engine extends AbstractEngine
             return;
         }
 
-        $index = $models->first()->searchableAs();
+        $model = $models->first();
+        $index = $model->searchableAs();
+        $routingPath = in_array('ElasticScoutDriverPlus\ShardRouting', class_uses_recursive($model)) ? $model->getRoutingPath() : null;
         $documents = $this->documentFactory->makeFromModels($models);
 
-        $this->documentManager->delete($index, $documents->all(), $this->refreshDocuments);
+        $this->documentManager->delete($index, $documents->all(), $this->refreshDocuments, $routingPath);
     }
 
     /**

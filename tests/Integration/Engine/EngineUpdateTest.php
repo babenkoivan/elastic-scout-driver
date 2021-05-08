@@ -10,7 +10,6 @@ use ElasticScoutDriver\Factories\DocumentFactoryInterface;
 use ElasticScoutDriver\Factories\ModelFactoryInterface;
 use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
 use ElasticScoutDriver\Tests\App\Client;
-use ElasticScoutDriver\Tests\App\ClientWithRouting;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use stdClass;
 
@@ -72,7 +71,7 @@ final class EngineUpdateTest extends TestCase
 
     public function test_model_collection_with_custom_routing_can_be_indexed(): void
     {
-        $clients = factory(ClientWithRouting::class, rand(2, 10))->create();
+        $clients = factory(Client::class, rand(2, 10))->create(['use_shard_routing' => true]);
 
         $searchResponse = $this->documentManager->search(
             $clients->first()->searchableAs(),
@@ -89,7 +88,7 @@ final class EngineUpdateTest extends TestCase
             return $hit->getDocument()->getId();
         })->all();
 
-        $this->assertEquals($clientIds, $documentIds);
+        $this->assertEqualsCanonicalizing($clientIds, $documentIds);
     }
 
     public function test_metadata_is_indexed_when_soft_deletes_are_enabled(): void

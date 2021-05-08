@@ -22,7 +22,6 @@ final class DocumentFactory implements DocumentFactoryInterface
             }
 
             $documentId = (string)$model->getScoutKey();
-            $documentRouting = $model instanceof \ElasticScoutDriver\CustomRouting ? $model->getRoutingKey() : null;
             $documentContent = array_merge($model->scoutMetadata(), $model->toSearchableArray());
 
             if (array_key_exists('_id', $documentContent)) {
@@ -33,7 +32,7 @@ final class DocumentFactory implements DocumentFactoryInterface
                 ));
             }
 
-            return new Document($documentId, $documentContent, $documentRouting);
+            return new Document($documentId, $documentContent);
         })->toBase();
     }
 }

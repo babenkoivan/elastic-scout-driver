@@ -10,7 +10,6 @@ use ElasticScoutDriver\Factories\DocumentFactoryInterface;
 use ElasticScoutDriver\Factories\ModelFactoryInterface;
 use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
 use ElasticScoutDriver\Tests\App\Client;
-use ElasticScoutDriver\Tests\App\ClientWithRouting;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Database\Eloquent\Model;
 
@@ -81,7 +80,7 @@ final class EngineDeleteTest extends TestCase
 
     public function test_model_collection_with_custom_routing_can_be_deleted_from_index(): void
     {
-        $source = factory(ClientWithRouting::class, rand(6, 10))->create();
+        $source = factory(Client::class, rand(6, 10))->create(['use_shard_routing' => true]);
 
         $deleted = $source->slice(0, rand(2, 4))->each(static function (Model $client) {
             $client->forceDelete();

@@ -11,5 +11,6 @@ $factory->define(Client::class, static function (Faker $faker) {
         'last_name' => $faker->lastName,
         'phone_number' => $faker->unique()->e164PhoneNumber,
         'email' => $faker->unique()->email,
+        'use_shard_routing' => false,
     ];
 });

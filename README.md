@@ -113,23 +113,6 @@ In case the basic search doesn't cover your project needs check [Elastic Scout D
 which extends standard Scout search capabilities by introducing advanced query builders. These builders give you 
 possibility to use compound queries, custom filters and sorting, highlights and more.
 
-
-## Custom routing
-
-In case you need [custom es routing](https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-routing-field.html) you can implement `CustomRouting`.
-
-```php
-class MyModel extends Model implements CustomRouting
-{
-    public function getRoutingKey(): string
-    {
-        return $this->user_id;
-    }
-}
-```
-
-This will allow for custom routing on index and delete operations.
-
 ## Migrations
 
 If you are looking for a way to control Elasticsearch index schema programmatically check [Elastic Migrations](https://github.com/babenkoivan/elastic-migrations).
