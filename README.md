@@ -52,10 +52,18 @@ composer require babenkoivan/elastic-scout-driver
 composer require laravel/scout
 ``` 
 
-When Scout is installed publish its configuration and change the `driver` option in the `config/scout.php` file to `elastic`:
+After Scout has been installed, publish its configuration file using:
 
 ```bash
 php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
+```
+
+Then, change the `driver` option in the `config/scout.php` file to `elastic`:
+
+```php
+// config/scout.php
+
+'driver' => env('SCOUT_DRIVER', 'elastic'),
 ```
 
 If you want to use Elastic Scout Driver with [Lumen framework](https://lumen.laravel.com/) check [this guide](https://github.com/babenkoivan/elastic-scout-driver/wiki/Lumen-Installation).
