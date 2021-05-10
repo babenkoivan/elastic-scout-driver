@@ -112,7 +112,7 @@ is used:
 $orders = App\Order::search()->where('user_id', 1)->get();
 ``` 
 
-Please refer to [the official Laravel Scout documentation](https://laravel.com/docs/6.x/scout)
+Please refer to [the official Laravel Scout documentation](https://laravel.com/docs/master/scout)
 for more details and usage examples.
 
 ## Advanced Search
