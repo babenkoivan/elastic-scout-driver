@@ -3,6 +3,7 @@
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
 use ElasticAdapter\Documents\DocumentManager;
+use ElasticAdapter\Indices\IndexManager;
 use ElasticAdapter\Search\Hit;
 use ElasticAdapter\Search\SearchRequest;
 use ElasticScoutDriver\Engine;
@@ -41,7 +42,8 @@ final class EngineUpdateTest extends TestCase
             $documentManager,
             resolve(DocumentFactoryInterface::class),
             resolve(SearchRequestFactoryInterface::class),
-            resolve(ModelFactoryInterface::class)
+            resolve(ModelFactoryInterface::class),
+            resolve(IndexManager::class)
         );
 
         $engine->update((new Client())->newCollection());

@@ -6,12 +6,12 @@ parameters:
 			path: src/Engine.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:pushSoftDeleteMetadata\\(\\)\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getScoutKey\\(\\)\\.$#"
 			count: 1
 			path: src/Factories/DocumentFactory.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getScoutKey\\(\\)\\.$#"
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:pushSoftDeleteMetadata\\(\\)\\.$#"
 			count: 1
 			path: src/Factories/DocumentFactory.php
 
@@ -26,13 +26,18 @@ parameters:
 			path: src/Factories/DocumentFactory.php
 
 		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getScoutKey\\(\\)\\.$#"
+			count: 4
+			path: src/Factories/ModelFactory.php
+
+		-
 			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getScoutModelsByIds\\(\\)\\.$#"
 			count: 1
 			path: src/Factories/ModelFactory.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getScoutKey\\(\\)\\.$#"
-			count: 2
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:queryScoutModelsByIds\\(\\)\\.$#"
+			count: 1
 			path: src/Factories/ModelFactory.php
 
 		-

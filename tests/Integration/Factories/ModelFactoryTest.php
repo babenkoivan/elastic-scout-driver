@@ -28,7 +28,19 @@ final class ModelFactoryTest extends TestCase
         $this->modelFactory = new ModelFactory();
     }
 
-    public function test_empty_model_collection_is_made_from_empty_search_response(): void
+    public function factoryMethodProvider(): array
+    {
+        return [
+            ['makeFromSearchResponseUsingBuilder'],
+            ['makeLazyFromSearchResponseUsingBuilder'],
+        ];
+    }
+
+    /**
+     * @dataProvider factoryMethodProvider
+     * @testdox Test empty model collection is made from empty search response using $factoryMethod
+     */
+    public function test_empty_model_collection_is_made_from_empty_search_response(string $factoryMethod): void
     {
         $builder = new Builder(new Client(), 'test');
 
@@ -39,12 +51,16 @@ final class ModelFactoryTest extends TestCase
             ],
         ]);
 
-        $models = $this->modelFactory->makeFromSearchResponseUsingBuilder($searchResponse, $builder);
+        $models = $this->modelFactory->$factoryMethod($searchResponse, $builder);
 
         $this->assertTrue($models->isEmpty());
     }
 
-    public function test_model_collection_can_be_made_from_not_empty_search_response(): void
+    /**
+     * @dataProvider factoryMethodProvider
+     * @testdox Test empty model collection can be made from not empty search response using $factoryMethod
+     */
+    public function test_model_collection_can_be_made_from_not_empty_search_response(string $factoryMethod): void
     {
         $clients = collect([
             ['id' => 1, 'name' => 'John'],
@@ -66,7 +82,7 @@ final class ModelFactoryTest extends TestCase
             ],
         ]);
 
-        $models = $this->modelFactory->makeFromSearchResponseUsingBuilder($searchResponse, $builder);
+        $models = $this->modelFactory->$factoryMethod($searchResponse, $builder);
 
         $this->assertCount($clients->count(), $models);
         $this->assertEquals($clients->last()->toArray(), $models->first()->toArray());
