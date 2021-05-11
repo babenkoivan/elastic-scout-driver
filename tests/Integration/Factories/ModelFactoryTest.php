@@ -7,6 +7,7 @@ use ElasticScoutDriver\Factories\ModelFactory;
 use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use Laravel\Scout\Builder;
+use Laravel\Scout\Searchable;
 
 /**
  * @covers \ElasticScoutDriver\Factories\ModelFactory
@@ -30,10 +31,14 @@ final class ModelFactoryTest extends TestCase
 
     public function factoryMethodProvider(): array
     {
-        return [
-            ['makeFromSearchResponseUsingBuilder'],
-            ['makeLazyFromSearchResponseUsingBuilder'],
-        ];
+        $methods = [['makeFromSearchResponseUsingBuilder']];
+
+        // this method doesn't exist in Scout below v9
+        if (method_exists(Searchable::class, 'queryScoutModelsByIds')) {
+            $methods[] = ['makeLazyFromSearchResponseUsingBuilder'];
+        }
+
+        return $methods;
     }
 
     /**
