@@ -15,28 +15,28 @@ use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine as AbstractEngine;
 use stdClass;
 
-final class Engine extends AbstractEngine
+class Engine extends AbstractEngine
 {
     /**
      * @var bool
      */
-    private $refreshDocuments;
+    protected $refreshDocuments;
     /**
      * @var DocumentManager
      */
-    private $documentManager;
+    protected $documentManager;
     /**
      * @var DocumentFactoryInterface
      */
-    private $documentFactory;
+    protected $documentFactory;
     /**
      * @var SearchRequestFactoryInterface
      */
-    private $searchRequestFactory;
+    protected $searchRequestFactory;
     /**
      * @var ModelFactoryInterface
      */
-    private $modelFactory;
+    protected $modelFactory;
 
     public function __construct(
         DocumentManager $documentManager,
