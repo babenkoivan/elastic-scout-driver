@@ -6,7 +6,7 @@ use ElasticAdapter\Search\SearchRequest;
 use Laravel\Scout\Builder;
 use stdClass;
 
-final class SearchRequestFactory implements SearchRequestFactoryInterface
+class SearchRequestFactory implements SearchRequestFactoryInterface
 {
     public function makeFromBuilder(Builder $builder, array $options = []): SearchRequest
     {

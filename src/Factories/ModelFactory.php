@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Builder;
 
-final class ModelFactory implements ModelFactoryInterface
+class ModelFactory implements ModelFactoryInterface
 {
     public function makeFromSearchResponseUsingBuilder(SearchResponse $searchResponse, Builder $builder): Collection
     {

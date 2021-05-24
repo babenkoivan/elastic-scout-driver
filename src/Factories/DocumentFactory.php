@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection as BaseCollection;
 use UnexpectedValueException;
 
-final class DocumentFactory implements DocumentFactoryInterface
+class DocumentFactory implements DocumentFactoryInterface
 {
     public function makeFromModels(EloquentCollection $models): BaseCollection
     {
