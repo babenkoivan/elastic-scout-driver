@@ -3,6 +3,8 @@
 namespace ElasticScoutDriver;
 
 use ElasticAdapter\Documents\DocumentManager;
+use ElasticAdapter\Indices\Index;
+use ElasticAdapter\Indices\IndexManager;
 use ElasticAdapter\Search\Hit;
 use ElasticAdapter\Search\SearchResponse;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
@@ -11,6 +13,7 @@ use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
+use InvalidArgumentException;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine as AbstractEngine;
 use stdClass;
@@ -37,12 +40,17 @@ class Engine extends AbstractEngine
      * @var ModelFactoryInterface
      */
     protected $modelFactory;
+    /**
+     * @var IndexManager
+     */
+    protected $indexManager;
 
     public function __construct(
         DocumentManager $documentManager,
         DocumentFactoryInterface $documentFactory,
         SearchRequestFactoryInterface $searchRequestFactory,
-        ModelFactoryInterface $modelFactory
+        ModelFactoryInterface $modelFactory,
+        IndexManager $indexManager
     ) {
         $this->refreshDocuments = config('elastic.scout_driver.refresh_documents');
 
@@ -50,6 +58,7 @@ class Engine extends AbstractEngine
         $this->documentFactory = $documentFactory;
         $this->searchRequestFactory = $searchRequestFactory;
         $this->modelFactory = $modelFactory;
+        $this->indexManager = $indexManager;
     }
 
     /**
@@ -136,6 +145,14 @@ class Engine extends AbstractEngine
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function lazyMap(Builder $builder, $results, $model)
+    {
+        return $this->modelFactory->makeLazyFromSearchResponseUsingBuilder($results, $builder);
+    }
+
+    /**
      * Get the total count from a raw result returned by the engine.
      *
      * @param SearchResponse $results
@@ -156,5 +173,25 @@ class Engine extends AbstractEngine
         $query = ['match_all' => new stdClass()];
 
         $this->documentManager->deleteByQuery($index, $query, $this->refreshDocuments);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function createIndex($name, array $options = [])
+    {
+        if (isset($options['primaryKey'])) {
+            throw new InvalidArgumentException('It is not possible to change the primary key name');
+        }
+
+        $this->indexManager->create(new Index($name));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function deleteIndex($name)
+    {
+        $this->indexManager->drop($name);
     }
 }

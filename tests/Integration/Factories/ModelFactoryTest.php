@@ -7,6 +7,7 @@ use ElasticScoutDriver\Factories\ModelFactory;
 use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use Laravel\Scout\Builder;
+use Laravel\Scout\Searchable;
 
 /**
  * @covers \ElasticScoutDriver\Factories\ModelFactory
@@ -28,7 +29,23 @@ final class ModelFactoryTest extends TestCase
         $this->modelFactory = new ModelFactory();
     }
 
-    public function test_empty_model_collection_is_made_from_empty_search_response(): void
+    public function factoryMethodProvider(): array
+    {
+        $methods = [['makeFromSearchResponseUsingBuilder']];
+
+        // this method doesn't exist in Scout below v9
+        if (method_exists(Searchable::class, 'queryScoutModelsByIds')) {
+            $methods[] = ['makeLazyFromSearchResponseUsingBuilder'];
+        }
+
+        return $methods;
+    }
+
+    /**
+     * @dataProvider factoryMethodProvider
+     * @testdox Test empty model collection is made from empty search response using $factoryMethod
+     */
+    public function test_empty_model_collection_is_made_from_empty_search_response(string $factoryMethod): void
     {
         $builder = new Builder(new Client(), 'test');
 
@@ -39,12 +56,16 @@ final class ModelFactoryTest extends TestCase
             ],
         ]);
 
-        $models = $this->modelFactory->makeFromSearchResponseUsingBuilder($searchResponse, $builder);
+        $models = $this->modelFactory->$factoryMethod($searchResponse, $builder);
 
         $this->assertTrue($models->isEmpty());
     }
 
-    public function test_model_collection_can_be_made_from_not_empty_search_response(): void
+    /**
+     * @dataProvider factoryMethodProvider
+     * @testdox Test empty model collection can be made from not empty search response using $factoryMethod
+     */
+    public function test_model_collection_can_be_made_from_not_empty_search_response(string $factoryMethod): void
     {
         $clients = collect([
             ['id' => 1, 'name' => 'John'],
@@ -66,7 +87,7 @@ final class ModelFactoryTest extends TestCase
             ],
         ]);
 
-        $models = $this->modelFactory->makeFromSearchResponseUsingBuilder($searchResponse, $builder);
+        $models = $this->modelFactory->$factoryMethod($searchResponse, $builder);
 
         $this->assertCount($clients->count(), $models);
         $this->assertEquals($clients->last()->toArray(), $models->first()->toArray());
