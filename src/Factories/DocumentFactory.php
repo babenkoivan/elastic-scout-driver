@@ -11,9 +11,9 @@ use UnexpectedValueException;
 
 class DocumentFactory implements DocumentFactoryInterface
 {
-    public function makeFromModels(EloquentCollection $models): BaseCollection
+    public function makeFromModels(EloquentCollection $models, bool $deleteMode = false): BaseCollection
     {
-        return $models->map(static function (Model $model) {
+        return $models->map(static function (Model $model) use ($deleteMode) {
             if (
                 in_array(SoftDeletes::class, class_uses_recursive(get_class($model))) &&
                 config('scout.soft_delete', false)
@@ -22,7 +22,7 @@ class DocumentFactory implements DocumentFactoryInterface
             }
 
             $documentId = (string)$model->getScoutKey();
-            $documentContent = array_merge($model->scoutMetadata(), $model->toSearchableArray());
+            $documentContent = $deleteMode ? $model->scoutMetadata() : array_merge($model->scoutMetadata(), $model->toSearchableArray());
 
             if (array_key_exists('_id', $documentContent)) {
                 throw new UnexpectedValueException(sprintf(

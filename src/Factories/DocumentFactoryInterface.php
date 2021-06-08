@@ -7,5 +7,5 @@ use Illuminate\Support\Collection as BaseCollection;
 
 interface DocumentFactoryInterface
 {
-    public function makeFromModels(EloquentCollection $models): BaseCollection;
+    public function makeFromModels(EloquentCollection $models, bool $deleteMode = false): BaseCollection;
 }

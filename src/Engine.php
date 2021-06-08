@@ -71,7 +71,7 @@ class Engine extends AbstractEngine
         }
 
         $index = $models->first()->searchableAs();
-        $documents = $this->documentFactory->makeFromModels($models);
+        $documents = $this->documentFactory->makeFromModels($models, false);
 
         $this->documentManager->index($index, $documents->all(), $this->refreshDocuments);
     }
@@ -86,7 +86,7 @@ class Engine extends AbstractEngine
         }
 
         $index = $models->first()->searchableAs();
-        $documents = $this->documentFactory->makeFromModels($models);
+        $documents = $this->documentFactory->makeFromModels($models, true);
 
         $this->documentManager->delete($index, $documents->all(), $this->refreshDocuments);
     }
