@@ -5,6 +5,7 @@ namespace ElasticScoutDriver\Tests\Integration\Engine;
 use ElasticAdapter\Search\SearchResponse;
 use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
+use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -129,5 +130,19 @@ final class EngineSearchTest extends TestCase
         $found = Client::search('name:(John OR Matthew)')->get();
 
         $this->assertEquals(['John', 'Matthew'], $found->pluck('name')->all());
+    }
+
+    public function test_search_with_builder_index(): void
+    {
+        $this->expectException(Missing404Exception::class);
+
+        Client::search('')->within('missing_index')->get();
+    }
+
+    public function test_paginate_search_with_builder_index(): void
+    {
+        $this->expectException(Missing404Exception::class);
+
+        Client::search('')->within('missing_index')->paginate();
     }
 }
