@@ -4,6 +4,8 @@ includes:
 parameters:
   level: max
   checkMissingIterableValueType: false
+  excludePaths:
+    - tests/App/database/factories
   paths:
     - src
     - tests

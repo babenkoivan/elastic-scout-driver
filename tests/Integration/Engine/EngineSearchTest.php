@@ -132,17 +132,17 @@ final class EngineSearchTest extends TestCase
         $this->assertEquals(['John', 'Matthew'], $found->pluck('name')->all());
     }
 
-    public function test_search_with_builder_index(): void
+    public function test_search_with_custom_index(): void
     {
         $this->expectException(Missing404Exception::class);
 
-        Client::search('')->within('missing_index')->get();
+        Client::search()->within('missing_index')->get();
     }
 
-    public function test_paginate_search_with_builder_index(): void
+    public function test_paginate_search_with_custom_index(): void
     {
         $this->expectException(Missing404Exception::class);
 
-        Client::search('')->within('missing_index')->paginate();
+        Client::search()->within('missing_index')->paginate();
     }
 }
