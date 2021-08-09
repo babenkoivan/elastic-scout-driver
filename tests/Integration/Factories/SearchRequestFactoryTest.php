@@ -60,8 +60,8 @@ final class SearchRequestFactoryTest extends TestCase
     public function test_search_request_can_be_made_from_builder_with_filters(): void
     {
         $builder = new Builder(new Client(), 'book');
-        $builder->where('author_id', 1);
         $builder->where('price', 60);
+        $builder->whereIn('author_id', [1, 2]);
 
         $searchRequest = $this->searchRequestFactory->makeFromBuilder($builder);
 
@@ -72,8 +72,8 @@ final class SearchRequestFactoryTest extends TestCase
                         'query_string' => ['query' => 'book'],
                     ],
                     'filter' => [
-                        ['term' => ['author_id' => 1]],
                         ['term' => ['price' => 60]],
+                        ['terms' => ['author_id' => [1, 2]]],
                     ],
                 ],
             ],

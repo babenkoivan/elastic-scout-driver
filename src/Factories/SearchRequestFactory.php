@@ -54,11 +54,19 @@ class SearchRequestFactory implements SearchRequestFactoryInterface
 
     protected function makeFilter(Builder $builder): ?array
     {
-        $filter = collect($builder->wheres)->map(static function ($value, string $field) {
+        $wheres = collect($builder->wheres)->map(static function ($value, string $field) {
             return [
                 'term' => [$field => $value],
             ];
         })->values();
+
+        $whereIns = collect($builder->whereIns)->map(static function (array $values, string $field) {
+            return [
+                'terms' => [$field => $values],
+            ];
+        })->values();
+
+        $filter = $wheres->merge($whereIns);
 
         return $filter->isEmpty() ? null : $filter->all();
     }

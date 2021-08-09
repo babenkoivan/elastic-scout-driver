@@ -48,13 +48,25 @@ final class EngineSearchTest extends TestCase
         $this->assertEquals($target->toArray(), $found->first()->toArray());
     }
 
-    public function test_search_result_can_be_filtered(): void
+    public function test_search_result_can_be_filtered_with_where_clause(): void
     {
         // add some mixins
         factory(Client::class, rand(2, 10))->create();
 
         $target = factory(Client::class)->create(['phone_number' => 'test: +01234567890']);
         $found = Client::search()->where('phone_number', $target->phone_number)->get();
+
+        $this->assertCount(1, $found);
+        $this->assertEquals($target->toArray(), $found->first()->toArray());
+    }
+
+    public function test_search_result_can_be_filtered_with_wherein_clause(): void
+    {
+        // add some mixins
+        factory(Client::class, rand(2, 10))->create();
+
+        $target = factory(Client::class)->create(['email' => 'foo@test.com']);
+        $found = Client::search()->whereIn('email', ['foo@test.com', 'bar@test.com'])->get();
 
         $this->assertCount(1, $found);
         $this->assertEquals($target->toArray(), $found->first()->toArray());
