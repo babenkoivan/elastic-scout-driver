@@ -57,12 +57,9 @@ final class SearchRequestFactoryTest extends TestCase
         ], $searchRequest->toArray());
     }
 
-    public function test_search_request_can_be_made_from_builder_with_filters(): void
+    public function test_search_request_can_be_made_from_builder_with_where_filter(): void
     {
-        $builder = new Builder(new Client(), 'book');
-        $builder->where('price', 60);
-        $builder->whereIn('author_id', [1, 2]);
-
+        $builder = (new Builder(new Client(), 'book'))->where('price', 60);
         $searchRequest = $this->searchRequestFactory->makeFromBuilder($builder);
 
         $this->assertSame([
@@ -73,6 +70,28 @@ final class SearchRequestFactoryTest extends TestCase
                     ],
                     'filter' => [
                         ['term' => ['price' => 60]],
+                    ],
+                ],
+            ],
+        ], $searchRequest->toArray());
+    }
+
+    public function test_search_request_can_be_made_from_builder_with_wherein_filter(): void
+    {
+        if (!method_exists(Builder::class, 'whereIn')) {
+            $this->markTestSkipped('Method "whereIn" is not supported by current Scout version');
+        }
+
+        $builder = (new Builder(new Client(), 'book'))->whereIn('author_id', [1, 2]);
+        $searchRequest = $this->searchRequestFactory->makeFromBuilder($builder);
+
+        $this->assertSame([
+            'query' => [
+                'bool' => [
+                    'must' => [
+                        'query_string' => ['query' => 'book'],
+                    ],
+                    'filter' => [
                         ['terms' => ['author_id' => [1, 2]]],
                     ],
                 ],

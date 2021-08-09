@@ -60,7 +60,7 @@ class SearchRequestFactory implements SearchRequestFactoryInterface
             ];
         })->values();
 
-        $whereIns = collect($builder->whereIns)->map(static function (array $values, string $field) {
+        $whereIns = collect($builder->whereIns ?? [])->map(static function (array $values, string $field) {
             return [
                 'terms' => [$field => $values],
             ];

@@ -7,6 +7,7 @@ use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Laravel\Scout\Builder;
 
 /**
  * @covers \ElasticScoutDriver\Engine
@@ -62,6 +63,10 @@ final class EngineSearchTest extends TestCase
 
     public function test_search_result_can_be_filtered_with_wherein_clause(): void
     {
+        if (!method_exists(Builder::class, 'whereIn')) {
+            $this->markTestSkipped('Method "whereIn" is not supported by current Scout version');
+        }
+
         // add some mixins
         factory(Client::class, rand(2, 10))->create();
 
