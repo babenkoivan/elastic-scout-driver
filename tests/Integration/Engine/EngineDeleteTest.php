@@ -66,12 +66,12 @@ final class EngineDeleteTest extends TestCase
         // assert that index has less documents
         $this->assertSame(
             $source->count() - $deleted->count(),
-            $searchResponse->getHitsTotal()
+            $searchResponse->total()
         );
 
         // assert that index doesn't have documents with ids corresponding to the deleted models
-        $documentIds = collect($searchResponse->getHits())->map(static function (Hit $hit) {
-            return $hit->getDocument()->getId();
+        $documentIds = $searchResponse->hits()->map(static function (Hit $hit) {
+            return $hit->document()->id();
         })->all();
 
         $deleted->each(function (Model $client) use ($documentIds) {
@@ -108,7 +108,7 @@ final class EngineDeleteTest extends TestCase
         );
 
         // assert that index is empty
-        $this->assertSame(0, $searchResponse->getHitsTotal());
+        $this->assertSame(0, $searchResponse->total());
     }
 
     public function test_models_can_be_soft_deleted_from_index(): void
@@ -127,8 +127,8 @@ final class EngineDeleteTest extends TestCase
             new SearchRequest(['match_all' => new stdClass()])
         );
 
-        collect($searchResponse->getHits())->each(function (Hit $hit) {
-            $this->assertSame(1, $hit->getDocument()->getContent()['__soft_deleted']);
+        $searchResponse->hits()->each(function (Hit $hit) {
+            $this->assertSame(1, $hit->document()->content('__soft_deleted'));
         });
     }
 }

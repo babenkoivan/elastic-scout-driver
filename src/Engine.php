@@ -3,7 +3,7 @@
 namespace ElasticScoutDriver;
 
 use ElasticAdapter\Documents\DocumentManager;
-use ElasticAdapter\Indices\Index;
+use ElasticAdapter\Indices\IndexBlueprint;
 use ElasticAdapter\Indices\IndexManager;
 use ElasticAdapter\Search\Hit;
 use ElasticAdapter\Search\SearchResponse;
@@ -73,7 +73,7 @@ class Engine extends AbstractEngine
         $index = $models->first()->searchableAs();
         $documents = $this->documentFactory->makeFromModels($models);
 
-        $this->documentManager->index($index, $documents->all(), $this->refreshDocuments);
+        $this->documentManager->index($index, $documents, $this->refreshDocuments);
     }
 
     /**
@@ -86,9 +86,12 @@ class Engine extends AbstractEngine
         }
 
         $index = $models->first()->searchableAs();
-        $documents = $this->documentFactory->makeFromModels($models);
 
-        $this->documentManager->delete($index, $documents->all(), $this->refreshDocuments);
+        $documentIds = $models->map(static function (Model $model) {
+            return (string)$model->getScoutKey();
+        })->all();
+
+        $this->documentManager->delete($index, $documentIds, $this->refreshDocuments);
     }
 
     /**
@@ -126,8 +129,8 @@ class Engine extends AbstractEngine
      */
     public function mapIds($results)
     {
-        return collect($results->getHits())->map(static function (Hit $hit) {
-            return $hit->getDocument()->getId();
+        return $results->hits()->map(static function (Hit $hit) {
+            return $hit->document()->id();
         });
     }
 
@@ -141,7 +144,7 @@ class Engine extends AbstractEngine
      */
     public function map(Builder $builder, $results, $model)
     {
-        return $this->modelFactory->makeFromSearchResponseUsingBuilder($results, $builder);
+        return $this->modelFactory->makeFromSearchResponse($results, $builder);
     }
 
     /**
@@ -149,7 +152,7 @@ class Engine extends AbstractEngine
      */
     public function lazyMap(Builder $builder, $results, $model)
     {
-        return $this->modelFactory->makeLazyFromSearchResponseUsingBuilder($results, $builder);
+        return $this->modelFactory->makeLazyFromSearchResponse($results, $builder);
     }
 
     /**
@@ -161,7 +164,7 @@ class Engine extends AbstractEngine
      */
     public function getTotalCount($results)
     {
-        return $results->getHitsTotal();
+        return $results->total();
     }
 
     /**
@@ -184,7 +187,7 @@ class Engine extends AbstractEngine
             throw new InvalidArgumentException('It is not possible to change the primary key name');
         }
 
-        $this->indexManager->create(new Index($name));
+        $this->indexManager->create(new IndexBlueprint($name));
     }
 
     /**

@@ -59,13 +59,13 @@ final class EngineUpdateTest extends TestCase
         );
 
         // assert that the amount of created models corresponds number of found documents
-        $this->assertSame($clients->count(), $searchResponse->getHitsTotal());
+        $this->assertSame($clients->count(), $searchResponse->total());
 
         // assert that the same model ids are in the index
         $clientIds = $clients->pluck($clients->first()->getKeyName())->all();
 
-        $documentIds = collect($searchResponse->getHits())->map(static function (Hit $hit) {
-            return $hit->getDocument()->getId();
+        $documentIds = $searchResponse->hits()->map(static function (Hit $hit) {
+            return $hit->document()->id();
         })->all();
 
         $this->assertEquals($clientIds, $documentIds);
@@ -83,8 +83,8 @@ final class EngineUpdateTest extends TestCase
             new SearchRequest(['match_all' => new stdClass()])
         );
 
-        collect($searchResponse->getHits())->each(function (Hit $hit) {
-            $this->assertSame(0, $hit->getDocument()->getContent()['__soft_deleted']);
+        $searchResponse->hits()->each(function (Hit $hit) {
+            $this->assertSame(0, $hit->document()->content('__soft_deleted'));
         });
     }
 }

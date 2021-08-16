@@ -2,10 +2,9 @@
 
 namespace ElasticScoutDriver\Factories;
 
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Collection;
 
 interface DocumentFactoryInterface
 {
-    public function makeFromModels(EloquentCollection $models): BaseCollection;
+    public function makeFromModels(Collection $models): Collection;
 }

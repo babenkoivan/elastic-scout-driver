@@ -31,11 +31,11 @@ final class ModelFactoryTest extends TestCase
 
     public function factoryMethodProvider(): array
     {
-        $methods = [['makeFromSearchResponseUsingBuilder']];
+        $methods = [['makeFromSearchResponse']];
 
         // this method doesn't exist in Scout below v9
         if (method_exists(Searchable::class, 'queryScoutModelsByIds')) {
-            $methods[] = ['makeLazyFromSearchResponseUsingBuilder'];
+            $methods[] = ['makeLazyFromSearchResponse'];
         }
 
         return $methods;

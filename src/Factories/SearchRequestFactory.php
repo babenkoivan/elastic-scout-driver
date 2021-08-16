@@ -13,15 +13,15 @@ class SearchRequestFactory implements SearchRequestFactoryInterface
         $searchRequest = new SearchRequest($this->makeQuery($builder));
 
         if ($sort = $this->makeSort($builder)) {
-            $searchRequest->setSort($sort);
+            $searchRequest->sort($sort);
         }
 
         if ($from = $this->makeFrom($options)) {
-            $searchRequest->setFrom($from);
+            $searchRequest->from($from);
         }
 
         if ($size = $this->makeSize($builder, $options)) {
-            $searchRequest->setSize($size);
+            $searchRequest->size($size);
         }
 
         return $searchRequest;
@@ -33,7 +33,7 @@ class SearchRequestFactory implements SearchRequestFactoryInterface
             'bool' => [],
         ];
 
-        if (strlen($builder->query) > 0) {
+        if (!empty($builder->query)) {
             $query['bool']['must'] = [
                 'query_string' => [
                     'query' => $builder->query,

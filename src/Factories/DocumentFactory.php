@@ -3,15 +3,14 @@
 namespace ElasticScoutDriver\Factories;
 
 use ElasticAdapter\Documents\Document;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\Collection;
 use UnexpectedValueException;
 
 class DocumentFactory implements DocumentFactoryInterface
 {
-    public function makeFromModels(EloquentCollection $models): BaseCollection
+    public function makeFromModels(Collection $models): Collection
     {
         return $models->map(static function (Model $model) {
             if (
@@ -33,6 +32,6 @@ class DocumentFactory implements DocumentFactoryInterface
             }
 
             return new Document($documentId, $documentContent);
-        })->toBase();
+        });
     }
 }

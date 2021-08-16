@@ -123,7 +123,7 @@ final class EngineSearchTest extends TestCase
         $foundRaw = Client::search()->raw();
 
         $this->assertInstanceOf(SearchResponse::class, $foundRaw);
-        $this->assertSame($source->count(), $foundRaw->getHitsTotal());
+        $this->assertSame($source->count(), $foundRaw->total());
     }
 
     public function test_soft_deleted_models_are_not_included_in_search_result(): void

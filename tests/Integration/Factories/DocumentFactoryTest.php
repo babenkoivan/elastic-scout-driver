@@ -35,8 +35,8 @@ final class DocumentFactoryTest extends TestCase
             $model = $clients->get($i);
             $document = $documents->get($i);
 
-            $this->assertSame((string)$model->getScoutKey(), $document->getId());
-            $this->assertSame($model->toSearchableArray(), $document->getContent());
+            $this->assertSame((string)$model->getScoutKey(), $document->id());
+            $this->assertSame($model->toSearchableArray(), $document->content());
         }
     }
 

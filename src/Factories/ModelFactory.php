@@ -11,53 +11,70 @@ use Laravel\Scout\Builder;
 
 class ModelFactory implements ModelFactoryInterface
 {
-    public function makeFromSearchResponseUsingBuilder(
+    public function makeFromSearchResponse(
         SearchResponse $searchResponse,
         Builder $builder
     ): Collection {
-        if (!$searchResponse->getHitsTotal()) {
+        if (!$searchResponse->total()) {
             return $builder->model->newCollection();
         }
 
-        $documentIds = $this->extractDocumentIdsFromSearchResponse($searchResponse);
-        $documentIdPositions = array_flip($documentIds);
+        $documentIds = $this->pluckDocumentIdsFromSearchResponse($searchResponse);
+        /** @var Collection $models */
+        $models = $builder->model->getScoutModelsByIds($builder, $documentIds);
 
-        return $builder->model->getScoutModelsByIds($builder, $documentIds)
-            ->filter(static function (Model $model) use ($documentIds) {
-                return in_array($model->getScoutKey(), $documentIds);
-            })
-            ->sortBy(static function (Model $model) use ($documentIdPositions) {
-                return $documentIdPositions[$model->getScoutKey()];
-            })
-            ->values();
+        return $this->sortModels($this->filterModels($models, $documentIds), $documentIds);
     }
 
-    public function makeLazyFromSearchResponseUsingBuilder(
+    public function makeLazyFromSearchResponse(
         SearchResponse $searchResponse,
         Builder $builder
     ): LazyCollection {
-        if (!$searchResponse->getHitsTotal()) {
+        if (!$searchResponse->total()) {
             return LazyCollection::make($builder->model->newCollection());
         }
 
-        $documentIds = $this->extractDocumentIdsFromSearchResponse($searchResponse);
-        $documentIdPositions = array_flip($documentIds);
+        $documentIds = $this->pluckDocumentIdsFromSearchResponse($searchResponse);
+        /** @var LazyCollection $models */
+        $models = $builder->model->queryScoutModelsByIds($builder, $documentIds)->cursor();
 
-        return $builder->model->queryScoutModelsByIds($builder, $documentIds)
-            ->cursor()
-            ->filter(static function (Model $model) use ($documentIds) {
-                return in_array($model->getScoutKey(), $documentIds);
-            })
-            ->sortBy(static function (Model $model) use ($documentIdPositions) {
-                return $documentIdPositions[$model->getScoutKey()];
-            })
-            ->values();
+        return $this->sortModels($this->filterModels($models, $documentIds), $documentIds);
     }
 
-    private function extractDocumentIdsFromSearchResponse(SearchResponse $searchResponse): array
+    private function pluckDocumentIdsFromSearchResponse(SearchResponse $searchResponse): array
     {
-        return collect($searchResponse->getHits())->map(static function (Hit $hit) {
-            return $hit->getDocument()->getId();
+        return $searchResponse->hits()->map(static function (Hit $hit) {
+            return $hit->document()->id();
         })->all();
+    }
+
+    /**
+     * @template T
+     *
+     * @param T $models
+     *
+     * @return T
+     */
+    private function filterModels($models, array $documentIds)
+    {
+        return $models->filter(static function (Model $model) use ($documentIds) {
+            return in_array($model->getScoutKey(), $documentIds);
+        })->values();
+    }
+
+    /**
+     * @template T
+     *
+     * @param T $models
+     *
+     * @return T
+     */
+    private function sortModels($models, array $documentIds)
+    {
+        $documentIdPositions = array_flip($documentIds);
+
+        return $models->sortBy(static function (Model $model) use ($documentIdPositions) {
+            return $documentIdPositions[$model->getScoutKey()];
+        })->values();
     }
 }

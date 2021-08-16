@@ -9,12 +9,12 @@ use Laravel\Scout\Builder;
 
 interface ModelFactoryInterface
 {
-    public function makeFromSearchResponseUsingBuilder(
+    public function makeFromSearchResponse(
         SearchResponse $searchResponse,
         Builder $builder
     ): Collection;
 
-    public function makeLazyFromSearchResponseUsingBuilder(
+    public function makeLazyFromSearchResponse(
         SearchResponse $searchResponse,
         Builder $builder
     ): LazyCollection;
