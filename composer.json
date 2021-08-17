@@ -38,7 +38,7 @@
         }
     },
     "require": {
-        "php": "^7.2 || ^8.0",
+        "php": "^7.3 || ^8.0",
         "babenkoivan/elastic-client": "^1.2",
         "babenkoivan/elastic-adapter": "v2.0.x-dev"
     },
