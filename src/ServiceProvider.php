@@ -20,7 +20,7 @@ final class ServiceProvider extends AbstractServiceProvider
     /**
      * @var array
      */
-    public $bindings = [
+    private $weakBindings = [
         ModelFactoryInterface::class => ModelFactory::class,
         DocumentFactoryInterface::class => DocumentFactory::class,
         SearchRequestFactoryInterface::class => SearchRequestFactory::class,
@@ -45,6 +45,10 @@ final class ServiceProvider extends AbstractServiceProvider
             $this->configPath,
             basename($this->configPath, '.php')
         );
+
+        foreach ($this->weakBindings as $key => $value) {
+            $this->app->bindIf($key, $value);
+        }
     }
 
     /**
