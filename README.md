@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-    <a href="https://www.buymeacoffee.com/ivanbabenko" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-green.png" alt="Buy Me A Coffee" height="50"></a>
+    <a href="https://ko-fi.com/E1E86U6C0" target="_blank"><img src="support.png" alt="Support the project!" height="70"></a>
 </p>
 
 ---
