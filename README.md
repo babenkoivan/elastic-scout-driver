@@ -12,8 +12,14 @@
     <a href="https://paypal.me/babenkoi"><img src="https://img.shields.io/badge/donate-paypal-blue"></a>
 </p>
 
+---
+
 <p align="center">
-    <a href="https://ko-fi.com/E1E86U6C0" target="_blank"><img src="support.png" alt="Support the project!" height="70"></a>
+    🎅🏻 Ho ho ho! Christmas is coming! Please consider supporting and starring the project! ⭐️
+</p>
+
+<p align="center">
+    <a href="https://ko-fi.com/ivanbabenko" target="_blank"><img src="support.png" alt="Support the project!" height="80"></a>
 </p>
 
 ---
