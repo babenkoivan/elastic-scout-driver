@@ -86,7 +86,7 @@ If it's set to `true` (`false` by default) documents are indexed immediately, wh
 You can configure `refresh_documents` in the `config/elastic.scout_driver.php` file after publishing it with the following command:
 
 ```bash
-php artisan vendor:publish --provider="ElasticScoutDriver\ServiceProvider"
+php artisan vendor:publish --provider="Elastic\ScoutDriver\ServiceProvider"
 ``` 
 
 At last, do not forget, that with Scout you can configure the searchable data, the model id and the index name.

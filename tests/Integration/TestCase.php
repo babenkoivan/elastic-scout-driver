@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace ElasticScoutDriver\Tests\Integration;
+namespace Elastic\ScoutDriver\Tests\Integration;
 
 use Elastic\Client\ServiceProvider as ElasticClientServiceProvider;
 use Elastic\Migrations\ServiceProvider as ElasticMigrationsServiceProvider;
-use ElasticScoutDriver\ServiceProvider as ElasticScoutDriverServiceProvider;
+use Elastic\ScoutDriver\ServiceProvider as ElasticScoutDriverServiceProvider;
 use Laravel\Scout\ScoutServiceProvider;
 use Orchestra\Testbench\TestCase as TestbenchTestCase;
 

@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace ElasticScoutDriver\Tests\Integration\Engine;
+namespace Elastic\ScoutDriver\Tests\Integration\Engine;
 
 use Elastic\Adapter\Indices\IndexManager;
-use ElasticScoutDriver\Engine;
-use ElasticScoutDriver\Tests\Integration\TestCase;
+use Elastic\ScoutDriver\Engine;
+use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use InvalidArgumentException;
 
 /**
- * @covers \ElasticScoutDriver\Engine
+ * @covers \Elastic\ScoutDriver\Engine
  */
 final class EngineIndexTest extends TestCase
 {

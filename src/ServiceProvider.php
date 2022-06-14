@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace ElasticScoutDriver;
+namespace Elastic\ScoutDriver;
 
-use ElasticScoutDriver\Factories\DocumentFactory;
-use ElasticScoutDriver\Factories\DocumentFactoryInterface;
-use ElasticScoutDriver\Factories\ModelFactory;
-use ElasticScoutDriver\Factories\ModelFactoryInterface;
-use ElasticScoutDriver\Factories\SearchParametersFactory;
-use ElasticScoutDriver\Factories\SearchParametersFactoryInterface;
+use Elastic\ScoutDriver\Factories\DocumentFactory;
+use Elastic\ScoutDriver\Factories\DocumentFactoryInterface;
+use Elastic\ScoutDriver\Factories\ModelFactory;
+use Elastic\ScoutDriver\Factories\ModelFactoryInterface;
+use Elastic\ScoutDriver\Factories\SearchParametersFactory;
+use Elastic\ScoutDriver\Factories\SearchParametersFactoryInterface;
 use Illuminate\Support\ServiceProvider as AbstractServiceProvider;
 use Laravel\Scout\EngineManager;
 

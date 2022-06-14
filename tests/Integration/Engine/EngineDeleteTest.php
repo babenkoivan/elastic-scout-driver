@@ -1,24 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace ElasticScoutDriver\Tests\Integration\Engine;
+namespace Elastic\ScoutDriver\Tests\Integration\Engine;
 
 use Elastic\Adapter\Documents\DocumentManager;
 use Elastic\Adapter\Indices\IndexManager;
 use Elastic\Adapter\Search\Hit;
 use Elastic\Adapter\Search\SearchParameters;
-use ElasticScoutDriver\Engine;
-use ElasticScoutDriver\Factories\DocumentFactoryInterface;
-use ElasticScoutDriver\Factories\ModelFactoryInterface;
-use ElasticScoutDriver\Factories\SearchParametersFactoryInterface;
-use ElasticScoutDriver\Tests\App\Client;
-use ElasticScoutDriver\Tests\Integration\TestCase;
+use Elastic\ScoutDriver\Engine;
+use Elastic\ScoutDriver\Factories\DocumentFactoryInterface;
+use Elastic\ScoutDriver\Factories\ModelFactoryInterface;
+use Elastic\ScoutDriver\Factories\SearchParametersFactoryInterface;
+use Elastic\ScoutDriver\Tests\App\Client;
+use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Database\Eloquent\Model;
 use stdClass;
 
 /**
- * @covers \ElasticScoutDriver\Engine
+ * @covers \Elastic\ScoutDriver\Engine
  *
- * @uses   \ElasticScoutDriver\Factories\DocumentFactory
+ * @uses   \Elastic\ScoutDriver\Factories\DocumentFactory
  */
 final class EngineDeleteTest extends TestCase
 {

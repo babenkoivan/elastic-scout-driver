@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace ElasticScoutDriver\Tests\Integration\Factories;
+namespace Elastic\ScoutDriver\Tests\Integration\Factories;
 
-use ElasticScoutDriver\Factories\SearchParametersFactory;
-use ElasticScoutDriver\Tests\App\Client;
-use ElasticScoutDriver\Tests\Integration\TestCase;
+use Elastic\ScoutDriver\Factories\SearchParametersFactory;
+use Elastic\ScoutDriver\Tests\App\Client;
+use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Laravel\Scout\Builder;
 use stdClass;
 
 /**
- * @covers \ElasticScoutDriver\Factories\SearchParametersFactory
+ * @covers \Elastic\ScoutDriver\Factories\SearchParametersFactory
  */
 final class SearchParametersFactoryTest extends TestCase
 {

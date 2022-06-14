@@ -1,15 +1,15 @@
 <?php declare(strict_types=1);
 
-namespace ElasticScoutDriver;
+namespace Elastic\ScoutDriver;
 
 use Elastic\Adapter\Documents\DocumentManager;
 use Elastic\Adapter\Indices\Index;
 use Elastic\Adapter\Indices\IndexManager;
 use Elastic\Adapter\Search\Hit;
 use Elastic\Adapter\Search\SearchResult;
-use ElasticScoutDriver\Factories\DocumentFactoryInterface;
-use ElasticScoutDriver\Factories\ModelFactoryInterface;
-use ElasticScoutDriver\Factories\SearchParametersFactoryInterface;
+use Elastic\ScoutDriver\Factories\DocumentFactoryInterface;
+use Elastic\ScoutDriver\Factories\ModelFactoryInterface;
+use Elastic\ScoutDriver\Factories\SearchParametersFactoryInterface;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;

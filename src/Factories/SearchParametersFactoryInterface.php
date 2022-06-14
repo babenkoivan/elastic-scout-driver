@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ElasticScoutDriver\Factories;
+namespace Elastic\ScoutDriver\Factories;
 
 use Elastic\Adapter\Search\SearchParameters;
 use Laravel\Scout\Builder;

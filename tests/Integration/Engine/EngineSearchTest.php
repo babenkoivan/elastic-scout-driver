@@ -1,20 +1,20 @@
 <?php declare(strict_types=1);
 
-namespace ElasticScoutDriver\Tests\Integration\Engine;
+namespace Elastic\ScoutDriver\Tests\Integration\Engine;
 
 use Elastic\Adapter\Search\SearchResult;
-use ElasticScoutDriver\Tests\App\Client;
-use ElasticScoutDriver\Tests\Integration\TestCase;
+use Elastic\ScoutDriver\Tests\App\Client;
+use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Laravel\Scout\Builder;
 use Throwable;
 
 /**
- * @covers \ElasticScoutDriver\Engine
+ * @covers \Elastic\ScoutDriver\Engine
  *
- * @uses   \ElasticScoutDriver\Factories\DocumentFactory
- * @uses   \ElasticScoutDriver\Factories\ModelFactory
- * @uses   \ElasticScoutDriver\Factories\SearchParametersFactory
+ * @uses   \Elastic\ScoutDriver\Factories\DocumentFactory
+ * @uses   \Elastic\ScoutDriver\Factories\ModelFactory
+ * @uses   \Elastic\ScoutDriver\Factories\SearchParametersFactory
  */
 final class EngineSearchTest extends TestCase
 {
