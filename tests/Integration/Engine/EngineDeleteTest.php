@@ -2,14 +2,14 @@
 
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
-use ElasticAdapter\Documents\DocumentManager;
-use ElasticAdapter\Indices\IndexManager;
-use ElasticAdapter\Search\Hit;
-use ElasticAdapter\Search\SearchRequest;
+use Elastic\Adapter\Documents\DocumentManager;
+use Elastic\Adapter\Indices\IndexManager;
+use Elastic\Adapter\Search\Hit;
+use Elastic\Adapter\Search\SearchParameters;
 use ElasticScoutDriver\Engine;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
 use ElasticScoutDriver\Factories\ModelFactoryInterface;
-use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
+use ElasticScoutDriver\Factories\SearchParametersFactoryInterface;
 use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Database\Eloquent\Model;
@@ -42,7 +42,7 @@ final class EngineDeleteTest extends TestCase
         $engine = new Engine(
             $documentManager,
             resolve(DocumentFactoryInterface::class),
-            resolve(SearchRequestFactoryInterface::class),
+            resolve(SearchParametersFactoryInterface::class),
             resolve(ModelFactoryInterface::class),
             resolve(IndexManager::class)
         );
@@ -58,19 +58,17 @@ final class EngineDeleteTest extends TestCase
             $client->forceDelete();
         });
 
-        $searchResponse = $this->documentManager->search(
-            $source->first()->searchableAs(),
-            new SearchRequest(['match_all' => new stdClass()])
-        );
+        $searchParameters = (new SearchParameters())->query(['match_all' => new stdClass()]);
+        $searchResult = $this->documentManager->search($source->first()->searchableAs(), $searchParameters);
 
-        // assert that index has less documents
+        // assert that index has fewer documents
         $this->assertSame(
             $source->count() - $deleted->count(),
-            $searchResponse->total()
+            $searchResult->total()
         );
 
         // assert that index doesn't have documents with ids corresponding to the deleted models
-        $documentIds = $searchResponse->hits()->map(static function (Hit $hit) {
+        $documentIds = $searchResult->hits()->map(static function (Hit $hit) {
             return $hit->document()->id();
         })->all();
 
@@ -102,13 +100,11 @@ final class EngineDeleteTest extends TestCase
 
         Client::removeAllFromSearch();
 
-        $searchResponse = $this->documentManager->search(
-            $clients->first()->searchableAs(),
-            new SearchRequest(['match_all' => new stdClass()])
-        );
+        $searchParameters = (new SearchParameters())->query(['match_all' => new stdClass()]);
+        $searchResult = $this->documentManager->search($clients->first()->searchableAs(), $searchParameters);
 
         // assert that index is empty
-        $this->assertSame(0, $searchResponse->total());
+        $this->assertSame(0, $searchResult->total());
     }
 
     public function test_models_can_be_soft_deleted_from_index(): void
@@ -122,12 +118,10 @@ final class EngineDeleteTest extends TestCase
             $client->delete();
         });
 
-        $searchResponse = $this->documentManager->search(
-            $clients->first()->searchableAs(),
-            new SearchRequest(['match_all' => new stdClass()])
-        );
+        $searchParameters = (new SearchParameters())->query(['match_all' => new stdClass()]);
+        $searchResult = $this->documentManager->search($clients->first()->searchableAs(), $searchParameters);
 
-        $searchResponse->hits()->each(function (Hit $hit) {
+        $searchResult->hits()->each(function (Hit $hit) {
             $this->assertSame(1, $hit->document()->content('__soft_deleted'));
         });
     }

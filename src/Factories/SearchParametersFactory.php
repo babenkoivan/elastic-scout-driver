@@ -2,29 +2,33 @@
 
 namespace ElasticScoutDriver\Factories;
 
-use ElasticAdapter\Search\SearchRequest;
+use Elastic\Adapter\Search\SearchParameters;
 use Laravel\Scout\Builder;
 use stdClass;
 
-class SearchRequestFactory implements SearchRequestFactoryInterface
+class SearchParametersFactory implements SearchParametersFactoryInterface
 {
-    public function makeFromBuilder(Builder $builder, array $options = []): SearchRequest
+    public function makeFromBuilder(Builder $builder, array $options = []): SearchParameters
     {
-        $searchRequest = new SearchRequest($this->makeQuery($builder));
+        $searchParameters = new SearchParameters();
+
+        if ($query = $this->makeQuery($builder)) {
+            $searchParameters->query($query);
+        }
 
         if ($sort = $this->makeSort($builder)) {
-            $searchRequest->sort($sort);
+            $searchParameters->sort($sort);
         }
 
         if ($from = $this->makeFrom($options)) {
-            $searchRequest->from($from);
+            $searchParameters->from($from);
         }
 
         if ($size = $this->makeSize($builder, $options)) {
-            $searchRequest->size($size);
+            $searchParameters->size($size);
         }
 
-        return $searchRequest;
+        return $searchParameters;
     }
 
     protected function makeQuery(Builder $builder): array
@@ -84,7 +88,7 @@ class SearchRequestFactory implements SearchRequestFactoryInterface
 
     protected function makeFrom(array $options): ?int
     {
-        if (isset($options['page']) && isset($options['perPage'])) {
+        if (isset($options['page'], $options['perPage'])) {
             return ($options['page'] - 1) * $options['perPage'];
         }
 

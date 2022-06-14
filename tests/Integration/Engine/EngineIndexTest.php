@@ -2,7 +2,7 @@
 
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
-use ElasticAdapter\Indices\IndexManager;
+use Elastic\Adapter\Indices\IndexManager;
 use ElasticScoutDriver\Engine;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use InvalidArgumentException;

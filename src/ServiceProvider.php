@@ -6,8 +6,8 @@ use ElasticScoutDriver\Factories\DocumentFactory;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
 use ElasticScoutDriver\Factories\ModelFactory;
 use ElasticScoutDriver\Factories\ModelFactoryInterface;
-use ElasticScoutDriver\Factories\SearchRequestFactory;
-use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
+use ElasticScoutDriver\Factories\SearchParametersFactory;
+use ElasticScoutDriver\Factories\SearchParametersFactoryInterface;
 use Illuminate\Support\ServiceProvider as AbstractServiceProvider;
 use Laravel\Scout\EngineManager;
 
@@ -23,7 +23,7 @@ final class ServiceProvider extends AbstractServiceProvider
     private $weakBindings = [
         ModelFactoryInterface::class => ModelFactory::class,
         DocumentFactoryInterface::class => DocumentFactory::class,
-        SearchRequestFactoryInterface::class => SearchRequestFactory::class,
+        SearchParametersFactoryInterface::class => SearchParametersFactory::class,
     ];
 
     /**

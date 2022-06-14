@@ -2,19 +2,19 @@
 
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
-use ElasticAdapter\Search\SearchResponse;
+use Elastic\Adapter\Search\SearchResult;
 use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
-use Elasticsearch\Common\Exceptions\Missing404Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Laravel\Scout\Builder;
+use Throwable;
 
 /**
  * @covers \ElasticScoutDriver\Engine
  *
  * @uses   \ElasticScoutDriver\Factories\DocumentFactory
  * @uses   \ElasticScoutDriver\Factories\ModelFactory
- * @uses   \ElasticScoutDriver\Factories\SearchRequestFactory
+ * @uses   \ElasticScoutDriver\Factories\SearchParametersFactory
  */
 final class EngineSearchTest extends TestCase
 {
@@ -117,12 +117,12 @@ final class EngineSearchTest extends TestCase
         $this->assertEquals($target->last()->toArray(), $paginator[0]->toArray());
     }
 
-    public function test_raw_search_returns_instance_of_search_response(): void
+    public function test_raw_search_returns_instance_of_search_result(): void
     {
         $source = factory(Client::class, rand(2, 10))->create();
         $foundRaw = Client::search()->raw();
 
-        $this->assertInstanceOf(SearchResponse::class, $foundRaw);
+        $this->assertInstanceOf(SearchResult::class, $foundRaw);
         $this->assertSame($source->count(), $foundRaw->total());
     }
 
@@ -151,15 +151,15 @@ final class EngineSearchTest extends TestCase
 
     public function test_search_with_custom_index(): void
     {
-        $this->expectException(Missing404Exception::class);
+        $this->expectException(Throwable::class);
 
-        Client::search()->within('missing_index')->get();
+        Client::search()->within('non_existing_index')->get();
     }
 
     public function test_paginate_search_with_custom_index(): void
     {
-        $this->expectException(Missing404Exception::class);
+        $this->expectException(Throwable::class);
 
-        Client::search()->within('missing_index')->paginate();
+        Client::search()->within('non_existing_index')->paginate();
     }
 }

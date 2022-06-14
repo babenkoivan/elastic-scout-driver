@@ -2,8 +2,8 @@
 
 namespace ElasticScoutDriver\Factories;
 
-use ElasticAdapter\Search\Hit;
-use ElasticAdapter\Search\SearchResponse;
+use Elastic\Adapter\Search\Hit;
+use Elastic\Adapter\Search\SearchResult;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\LazyCollection;
@@ -11,39 +11,39 @@ use Laravel\Scout\Builder;
 
 class ModelFactory implements ModelFactoryInterface
 {
-    public function makeFromSearchResponse(
-        SearchResponse $searchResponse,
+    public function makeFromSearchResult(
+        SearchResult $searchResult,
         Builder $builder
     ): Collection {
-        if (!$searchResponse->total()) {
+        if (!$searchResult->total()) {
             return $builder->model->newCollection();
         }
 
-        $documentIds = $this->pluckDocumentIdsFromSearchResponse($searchResponse);
+        $documentIds = $this->pluckDocumentIdsFromSearchResult($searchResult);
         /** @var Collection $models */
         $models = $builder->model->getScoutModelsByIds($builder, $documentIds);
 
         return $this->sortModels($this->filterModels($models, $documentIds), $documentIds);
     }
 
-    public function makeLazyFromSearchResponse(
-        SearchResponse $searchResponse,
+    public function makeLazyFromSearchResult(
+        SearchResult $searchResult,
         Builder $builder
     ): LazyCollection {
-        if (!$searchResponse->total()) {
+        if (!$searchResult->total()) {
             return LazyCollection::make($builder->model->newCollection());
         }
 
-        $documentIds = $this->pluckDocumentIdsFromSearchResponse($searchResponse);
+        $documentIds = $this->pluckDocumentIdsFromSearchResult($searchResult);
         /** @var LazyCollection $models */
         $models = $builder->model->queryScoutModelsByIds($builder, $documentIds)->cursor();
 
         return $this->sortModels($this->filterModels($models, $documentIds), $documentIds);
     }
 
-    private function pluckDocumentIdsFromSearchResponse(SearchResponse $searchResponse): array
+    private function pluckDocumentIdsFromSearchResult(SearchResult $searchResult): array
     {
-        return $searchResponse->hits()->map(static function (Hit $hit) {
+        return $searchResult->hits()->map(static function (Hit $hit) {
             return $hit->document()->id();
         })->all();
     }

@@ -2,14 +2,14 @@
 
 namespace ElasticScoutDriver\Tests\Integration\Engine;
 
-use ElasticAdapter\Documents\DocumentManager;
-use ElasticAdapter\Indices\IndexManager;
-use ElasticAdapter\Search\Hit;
-use ElasticAdapter\Search\SearchRequest;
+use Elastic\Adapter\Documents\DocumentManager;
+use Elastic\Adapter\Indices\IndexManager;
+use Elastic\Adapter\Search\Hit;
+use Elastic\Adapter\Search\SearchParameters;
 use ElasticScoutDriver\Engine;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
 use ElasticScoutDriver\Factories\ModelFactoryInterface;
-use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
+use ElasticScoutDriver\Factories\SearchParametersFactoryInterface;
 use ElasticScoutDriver\Tests\App\Client;
 use ElasticScoutDriver\Tests\Integration\TestCase;
 use stdClass;
@@ -41,7 +41,7 @@ final class EngineUpdateTest extends TestCase
         $engine = new Engine(
             $documentManager,
             resolve(DocumentFactoryInterface::class),
-            resolve(SearchRequestFactoryInterface::class),
+            resolve(SearchParametersFactoryInterface::class),
             resolve(ModelFactoryInterface::class),
             resolve(IndexManager::class)
         );
@@ -53,18 +53,16 @@ final class EngineUpdateTest extends TestCase
     {
         $clients = factory(Client::class, rand(2, 10))->create();
 
-        $searchResponse = $this->documentManager->search(
-            $clients->first()->searchableAs(),
-            new SearchRequest(['match_all' => new stdClass()])
-        );
+        $searchParameters = (new SearchParameters())->query(['match_all' => new stdClass()]);
+        $searchResult = $this->documentManager->search($clients->first()->searchableAs(), $searchParameters);
 
         // assert that the amount of created models corresponds number of found documents
-        $this->assertSame($clients->count(), $searchResponse->total());
+        $this->assertSame($clients->count(), $searchResult->total());
 
         // assert that the same model ids are in the index
         $clientIds = $clients->pluck($clients->first()->getKeyName())->all();
 
-        $documentIds = $searchResponse->hits()->map(static function (Hit $hit) {
+        $documentIds = $searchResult->hits()->map(static function (Hit $hit) {
             return $hit->document()->id();
         })->all();
 
@@ -78,12 +76,10 @@ final class EngineUpdateTest extends TestCase
 
         $clients = factory(Client::class, rand(2, 10))->create();
 
-        $searchResponse = $this->documentManager->search(
-            $clients->first()->searchableAs(),
-            new SearchRequest(['match_all' => new stdClass()])
-        );
+        $searchParameters = (new SearchParameters())->query(['match_all' => new stdClass()]);
+        $searchResult = $this->documentManager->search($clients->first()->searchableAs(), $searchParameters);
 
-        $searchResponse->hits()->each(function (Hit $hit) {
+        $searchResult->hits()->each(function (Hit $hit) {
             $this->assertSame(0, $hit->document()->content('__soft_deleted'));
         });
     }

@@ -2,14 +2,14 @@
 
 namespace ElasticScoutDriver;
 
-use ElasticAdapter\Documents\DocumentManager;
-use ElasticAdapter\Indices\IndexBlueprint;
-use ElasticAdapter\Indices\IndexManager;
-use ElasticAdapter\Search\Hit;
-use ElasticAdapter\Search\SearchResponse;
+use Elastic\Adapter\Documents\DocumentManager;
+use Elastic\Adapter\Indices\Index;
+use Elastic\Adapter\Indices\IndexManager;
+use Elastic\Adapter\Search\Hit;
+use Elastic\Adapter\Search\SearchResult;
 use ElasticScoutDriver\Factories\DocumentFactoryInterface;
 use ElasticScoutDriver\Factories\ModelFactoryInterface;
-use ElasticScoutDriver\Factories\SearchRequestFactoryInterface;
+use ElasticScoutDriver\Factories\SearchParametersFactoryInterface;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
@@ -33,9 +33,9 @@ class Engine extends AbstractEngine
      */
     protected $documentFactory;
     /**
-     * @var SearchRequestFactoryInterface
+     * @var SearchParametersFactoryInterface
      */
-    protected $searchRequestFactory;
+    protected $searchParametersFactory;
     /**
      * @var ModelFactoryInterface
      */
@@ -48,7 +48,7 @@ class Engine extends AbstractEngine
     public function __construct(
         DocumentManager $documentManager,
         DocumentFactoryInterface $documentFactory,
-        SearchRequestFactoryInterface $searchRequestFactory,
+        SearchParametersFactoryInterface $searchParametersFactory,
         ModelFactoryInterface $modelFactory,
         IndexManager $indexManager
     ) {
@@ -56,7 +56,7 @@ class Engine extends AbstractEngine
 
         $this->documentManager = $documentManager;
         $this->documentFactory = $documentFactory;
-        $this->searchRequestFactory = $searchRequestFactory;
+        $this->searchParametersFactory = $searchParametersFactory;
         $this->modelFactory = $modelFactory;
         $this->indexManager = $indexManager;
     }
@@ -100,9 +100,9 @@ class Engine extends AbstractEngine
     public function search(Builder $builder)
     {
         $index = $builder->index ?: $builder->model->searchableAs();
-        $searchRequest = $this->searchRequestFactory->makeFromBuilder($builder);
+        $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);
 
-        return $this->documentManager->search($index, $searchRequest);
+        return $this->documentManager->search($index, $searchParameters);
     }
 
     /**
@@ -112,18 +112,18 @@ class Engine extends AbstractEngine
     {
         $index = $builder->index ?: $builder->model->searchableAs();
 
-        $searchRequest = $this->searchRequestFactory->makeFromBuilder($builder, [
+        $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder, [
             'perPage' => (int)$perPage,
             'page' => (int)$page,
         ]);
 
-        return $this->documentManager->search($index, $searchRequest);
+        return $this->documentManager->search($index, $searchParameters);
     }
 
     /**
      * Pluck and return the primary keys of the given results.
      *
-     * @param SearchResponse $results
+     * @param SearchResult $results
      *
      * @return BaseCollection
      */
@@ -137,14 +137,14 @@ class Engine extends AbstractEngine
     /**
      * Map the given results to instances of the given model.
      *
-     * @param SearchResponse $results
+     * @param SearchResult $results
      * @param Model          $model
      *
      * @return EloquentCollection
      */
     public function map(Builder $builder, $results, $model)
     {
-        return $this->modelFactory->makeFromSearchResponse($results, $builder);
+        return $this->modelFactory->makeFromSearchResult($results, $builder);
     }
 
     /**
@@ -152,13 +152,13 @@ class Engine extends AbstractEngine
      */
     public function lazyMap(Builder $builder, $results, $model)
     {
-        return $this->modelFactory->makeLazyFromSearchResponse($results, $builder);
+        return $this->modelFactory->makeLazyFromSearchResult($results, $builder);
     }
 
     /**
      * Get the total count from a raw result returned by the engine.
      *
-     * @param SearchResponse $results
+     * @param SearchResult $results
      *
      * @return int|null
      */
@@ -187,7 +187,7 @@ class Engine extends AbstractEngine
             throw new InvalidArgumentException('It is not possible to change the primary key name');
         }
 
-        $this->indexManager->create(new IndexBlueprint($name));
+        $this->indexManager->create(new Index($name));
     }
 
     /**
