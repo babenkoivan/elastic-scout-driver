@@ -110,7 +110,7 @@ final class EngineDeleteTest extends TestCase
     public function test_models_can_be_soft_deleted_from_index(): void
     {
         // enable soft deletes
-        $this->app['config']->set('scout.soft_delete', true);
+        $this->config->set('scout.soft_delete', true);
 
         $clients = factory(Client::class, rand(2, 10))->create();
 

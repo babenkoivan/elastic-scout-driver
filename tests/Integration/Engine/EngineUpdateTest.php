@@ -72,7 +72,7 @@ final class EngineUpdateTest extends TestCase
     public function test_metadata_is_indexed_when_soft_deletes_are_enabled(): void
     {
         // enable soft deletes
-        $this->app['config']->set('scout.soft_delete', true);
+        $this->config->set('scout.soft_delete', true);
 
         $clients = factory(Client::class, rand(2, 10))->create();
 

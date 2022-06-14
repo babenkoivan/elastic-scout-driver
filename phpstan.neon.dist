@@ -4,8 +4,9 @@ includes:
 parameters:
   level: max
   checkMissingIterableValueType: false
-  excludePaths:
-    - tests/App/database/factories
+  checkGenericClassInNonGenericObjectType: false
   paths:
     - src
-    - tests
+  ignoreErrors:
+    - '#Parameter .+? of method Illuminate\\Support\\Collection<.+?>::.+?\(\) expects .+? given#'
+    - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Model::(getScoutKey|getScoutModelsByIds|queryScoutModelsByIds|searchableAs|scoutMetadata|pushSoftDeleteMetadata|toSearchableArray)\(\)#'

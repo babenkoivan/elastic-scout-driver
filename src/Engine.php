@@ -13,6 +13,7 @@ use Elastic\ScoutDriver\Factories\SearchParametersFactoryInterface;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection as BaseCollection;
+use Illuminate\Support\LazyCollection;
 use InvalidArgumentException;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine as AbstractEngine;
@@ -138,7 +139,7 @@ class Engine extends AbstractEngine
      * Map the given results to instances of the given model.
      *
      * @param SearchResult $results
-     * @param Model          $model
+     * @param Model        $model
      *
      * @return EloquentCollection
      */
@@ -148,7 +149,10 @@ class Engine extends AbstractEngine
     }
 
     /**
-     * {@inheritDoc}
+     * @param SearchResult $results
+     * @param Model        $model
+     *
+     * @return LazyCollection
      */
     public function lazyMap(Builder $builder, $results, $model)
     {

@@ -1,52 +1,16 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getScoutKey\\(\\)\\.$#"
-			count: 1
-			path: src/Engine.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:searchableAs\\(\\)\\.$#"
-			count: 3
-			path: src/Engine.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getScoutKey\\(\\)\\.$#"
-			count: 1
-			path: src/Factories/DocumentFactory.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:pushSoftDeleteMetadata\\(\\)\\.$#"
-			count: 1
-			path: src/Factories/DocumentFactory.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:scoutMetadata\\(\\)\\.$#"
-			count: 1
-			path: src/Factories/DocumentFactory.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:toSearchableArray\\(\\)\\.$#"
-			count: 1
-			path: src/Factories/DocumentFactory.php
-
-		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getScoutKey\\(\\)\\.$#"
+			message: "#^Cannot call method searchableAs\\(\\) on mixed\\.$#"
 			count: 2
-			path: src/Factories/ModelFactory.php
+			path: src/Engine.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:getScoutModelsByIds\\(\\)\\.$#"
+			message: "#^Property Elastic\\\\ScoutDriver\\\\Engine\\:\\:\\$refreshDocuments \\(bool\\) does not accept mixed\\.$#"
 			count: 1
-			path: src/Factories/ModelFactory.php
+			path: src/Engine.php
 
 		-
-			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:queryScoutModelsByIds\\(\\)\\.$#"
+			message: "#^Cannot call method extend\\(\\) on mixed\\.$#"
 			count: 1
-			path: src/Factories/ModelFactory.php
-
-		-
-			message: "#^Cannot call method run\\(\\) on Illuminate\\\\Testing\\\\PendingCommand\\|int\\.$#"
-			count: 4
-			path: tests/Integration/TestCase.php
-
+			path: src/ServiceProvider.php
