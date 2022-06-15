@@ -14,14 +14,8 @@ final class EngineIndexTest extends TestCase
 {
     private const INDEX_NAME = 'test';
 
-    /**
-     * @var IndexManager
-     */
-    private $indexManager;
-    /**
-     * @var Engine
-     */
-    private $engine;
+    private IndexManager $indexManager;
+    private Engine $engine;
 
     protected function setUp(): void
     {

@@ -13,10 +13,7 @@ use stdClass;
  */
 final class SearchParametersFactoryTest extends TestCase
 {
-    /**
-     * @var SearchParametersFactory
-     */
-    private $searchParametersFactory;
+    private SearchParametersFactory $searchParametersFactory;
 
     protected function setUp(): void
     {
@@ -110,7 +107,7 @@ final class SearchParametersFactoryTest extends TestCase
     public function test_search_parameters_can_be_made_from_builder_with_sort(): void
     {
         $builder = new Builder(new Client(), 'book');
-        $builder->orderBy('price', 'asc');
+        $builder->orderBy('price');
         $builder->orderBy('author_id', 'desc');
 
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);

@@ -80,7 +80,7 @@ final class EngineSearchTest extends TestCase
     public function test_search_result_can_be_sorted(): void
     {
         $source = factory(Client::class, rand(2, 10))->create()->sortBy('email')->values();
-        $found = Client::search()->orderBy('email', 'asc')->get();
+        $found = Client::search()->orderBy('email')->get();
 
         $this->assertEquals($source->toArray(), $found->toArray());
     }
@@ -106,7 +106,7 @@ final class EngineSearchTest extends TestCase
 
         /** @var LengthAwarePaginator $paginator */
         $paginator = Client::search($target->first()->name)
-            ->orderBy('phone_number', 'asc')
+            ->orderBy('phone_number')
             ->paginate(2, 'p', 3);
 
         $this->assertSame(2, $paginator->perPage());

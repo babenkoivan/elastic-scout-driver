@@ -19,7 +19,7 @@ class ModelFactory implements ModelFactoryInterface
             return $builder->model->newCollection();
         }
 
-        $documentIds = $this->pluckDocumentIdsFromSearchResult($searchResult);
+        $documentIds = $this->pluckDocumentIds($searchResult);
         /** @var Collection $models */
         $models = $builder->model->getScoutModelsByIds($builder, $documentIds);
 
@@ -34,18 +34,16 @@ class ModelFactory implements ModelFactoryInterface
             return LazyCollection::make($builder->model->newCollection());
         }
 
-        $documentIds = $this->pluckDocumentIdsFromSearchResult($searchResult);
+        $documentIds = $this->pluckDocumentIds($searchResult);
         /** @var LazyCollection $models */
         $models = $builder->model->queryScoutModelsByIds($builder, $documentIds)->cursor();
 
         return $this->sortModels($this->filterModels($models, $documentIds), $documentIds);
     }
 
-    private function pluckDocumentIdsFromSearchResult(SearchResult $searchResult): array
+    private function pluckDocumentIds(SearchResult $searchResult): array
     {
-        return $searchResult->hits()->map(static function (Hit $hit) {
-            return $hit->document()->id();
-        })->all();
+        return $searchResult->hits()->map(static fn (Hit $hit) => $hit->document()->id())->all();
     }
 
     /**
@@ -57,9 +55,7 @@ class ModelFactory implements ModelFactoryInterface
      */
     private function filterModels($models, array $documentIds)
     {
-        return $models->filter(static function (Model $model) use ($documentIds) {
-            return in_array($model->getScoutKey(), $documentIds);
-        })->values();
+        return $models->filter(static fn (Model $model) => in_array($model->getScoutKey(), $documentIds))->values();
     }
 
     /**
@@ -72,9 +68,6 @@ class ModelFactory implements ModelFactoryInterface
     private function sortModels($models, array $documentIds)
     {
         $documentIdPositions = array_flip($documentIds);
-
-        return $models->sortBy(static function (Model $model) use ($documentIdPositions) {
-            return $documentIdPositions[$model->getScoutKey()];
-        })->values();
+        return $models->sortBy(static fn (Model $model) => $documentIdPositions[$model->getScoutKey()])->values();
     }
 }

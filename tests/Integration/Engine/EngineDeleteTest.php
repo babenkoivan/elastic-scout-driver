@@ -4,8 +4,6 @@ namespace Elastic\ScoutDriver\Tests\Integration\Engine;
 
 use Elastic\Adapter\Documents\DocumentManager;
 use Elastic\Adapter\Indices\IndexManager;
-use Elastic\Adapter\Search\Hit;
-use Elastic\Adapter\Search\SearchParameters;
 use Elastic\ScoutDriver\Engine;
 use Elastic\ScoutDriver\Factories\DocumentFactoryInterface;
 use Elastic\ScoutDriver\Factories\ModelFactoryInterface;
@@ -13,7 +11,6 @@ use Elastic\ScoutDriver\Factories\SearchParametersFactoryInterface;
 use Elastic\ScoutDriver\Tests\App\Client;
 use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Database\Eloquent\Model;
-use stdClass;
 
 /**
  * @covers \Elastic\ScoutDriver\Engine
@@ -22,18 +19,6 @@ use stdClass;
  */
 final class EngineDeleteTest extends TestCase
 {
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->documentManager = resolve(DocumentManager::class);
-    }
-
     public function test_empty_model_collection_can_not_be_deleted_from_index(): void
     {
         $documentManager = $this->createMock(DocumentManager::class);
@@ -54,27 +39,16 @@ final class EngineDeleteTest extends TestCase
     {
         $source = factory(Client::class, rand(6, 10))->create();
 
-        $deleted = $source->slice(0, rand(2, 4))->each(static function (Model $client) {
+        $deleted = $source->slice(0, rand(2, 4))->each(static function (Client $client) {
             $client->forceDelete();
         });
 
-        $searchParameters = (new SearchParameters())->query(['match_all' => new stdClass()]);
-        $searchResult = $this->documentManager->search($source->first()->searchableAs(), $searchParameters);
+        $found = Client::search()->get();
 
-        // assert that index has fewer documents
-        $this->assertSame(
-            $source->count() - $deleted->count(),
-            $searchResult->total()
-        );
-
-        // assert that index doesn't have documents with ids corresponding to the deleted models
-        $documentIds = $searchResult->hits()->map(static function (Hit $hit) {
-            return $hit->document()->id();
-        })->all();
-
-        $deleted->each(function (Model $client) use ($documentIds) {
-            $this->assertNotContains($client->getKey(), $documentIds);
-        });
+        // assert that found fewer documents than in the source
+        $this->assertSame($source->count() - $deleted->count(), $found->count());
+        // assert that deleted models are not found
+        $this->assertCount(0, $deleted->pluck('id')->intersect($found->pluck('id')));
     }
 
     public function test_not_found_error_is_ignored_when_models_are_being_deleted_from_index(): void
@@ -84,7 +58,7 @@ final class EngineDeleteTest extends TestCase
         // remove models from index
         $clients->unsearchable();
 
-        $clients->each(function (Model $client) {
+        $clients->each(function (Client $client) {
             $client->forceDelete();
 
             $this->assertDatabaseMissing(
@@ -96,15 +70,14 @@ final class EngineDeleteTest extends TestCase
 
     public function test_models_can_be_flushed_from_index(): void
     {
-        $clients = factory(Client::class, rand(2, 10))->create();
+        factory(Client::class, rand(2, 10))->create();
 
         Client::removeAllFromSearch();
 
-        $searchParameters = (new SearchParameters())->query(['match_all' => new stdClass()]);
-        $searchResult = $this->documentManager->search($clients->first()->searchableAs(), $searchParameters);
+        $found = Client::search()->get();
 
-        // assert that index is empty
-        $this->assertSame(0, $searchResult->total());
+        // assert that nothing is found
+        $this->assertSame(0, $found->count());
     }
 
     public function test_models_can_be_soft_deleted_from_index(): void
@@ -112,17 +85,16 @@ final class EngineDeleteTest extends TestCase
         // enable soft deletes
         $this->config->set('scout.soft_delete', true);
 
-        $clients = factory(Client::class, rand(2, 10))->create();
+        $source = factory(Client::class, rand(2, 10))->create();
 
-        $clients->each(static function (Model $client) {
+        $source->each(static function (Model $client) {
             $client->delete();
         });
 
-        $searchParameters = (new SearchParameters())->query(['match_all' => new stdClass()]);
-        $searchResult = $this->documentManager->search($clients->first()->searchableAs(), $searchParameters);
+        $found = Client::search()->withTrashed()->get();
 
-        $searchResult->hits()->each(function (Hit $hit) {
-            $this->assertSame(1, $hit->document()->content('__soft_deleted'));
+        $found->each(function (Model $client) {
+            $this->assertNotNull($client->deleted_at);
         });
     }
 }

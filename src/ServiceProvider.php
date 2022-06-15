@@ -8,28 +8,21 @@ use Elastic\ScoutDriver\Factories\ModelFactory;
 use Elastic\ScoutDriver\Factories\ModelFactoryInterface;
 use Elastic\ScoutDriver\Factories\SearchParametersFactory;
 use Elastic\ScoutDriver\Factories\SearchParametersFactoryInterface;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\ServiceProvider as AbstractServiceProvider;
 use Laravel\Scout\EngineManager;
 
 final class ServiceProvider extends AbstractServiceProvider
 {
-    /**
-     * @var string
-     */
-    private $configPath;
-    /**
-     * @var array
-     */
-    private $weakBindings = [
+    private string $configPath;
+
+    private array $weakBindings = [
         ModelFactoryInterface::class => ModelFactory::class,
         DocumentFactoryInterface::class => DocumentFactory::class,
         SearchParametersFactoryInterface::class => SearchParametersFactory::class,
     ];
 
-    /**
-     * {@inheritDoc}
-     */
-    public function __construct($app)
+    public function __construct(Application $app)
     {
         parent::__construct($app);
 
@@ -37,7 +30,7 @@ final class ServiceProvider extends AbstractServiceProvider
     }
 
     /**
-     * {@inheritDoc}
+     * @return void
      */
     public function register()
     {
@@ -60,8 +53,6 @@ final class ServiceProvider extends AbstractServiceProvider
             $this->configPath => config_path(basename($this->configPath)),
         ]);
 
-        resolve(EngineManager::class)->extend('elastic', static function () {
-            return resolve(Engine::class);
-        });
+        resolve(EngineManager::class)->extend('elastic', static fn () => resolve(Engine::class));
     }
 }

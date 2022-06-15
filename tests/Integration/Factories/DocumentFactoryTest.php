@@ -14,10 +14,7 @@ use UnexpectedValueException;
  */
 final class DocumentFactoryTest extends TestCase
 {
-    /**
-     * @var DocumentFactory
-     */
-    private $documentFactory;
+    private DocumentFactory $documentFactory;
 
     protected function setUp(): void
     {

@@ -21,30 +21,12 @@ use stdClass;
 
 class Engine extends AbstractEngine
 {
-    /**
-     * @var bool
-     */
-    protected $refreshDocuments;
-    /**
-     * @var DocumentManager
-     */
-    protected $documentManager;
-    /**
-     * @var DocumentFactoryInterface
-     */
-    protected $documentFactory;
-    /**
-     * @var SearchParametersFactoryInterface
-     */
-    protected $searchParametersFactory;
-    /**
-     * @var ModelFactoryInterface
-     */
-    protected $modelFactory;
-    /**
-     * @var IndexManager
-     */
-    protected $indexManager;
+    protected bool $refreshDocuments;
+    protected DocumentManager $documentManager;
+    protected DocumentFactoryInterface $documentFactory;
+    protected SearchParametersFactoryInterface $searchParametersFactory;
+    protected ModelFactoryInterface $modelFactory;
+    protected IndexManager $indexManager;
 
     public function __construct(
         DocumentManager $documentManager,
@@ -63,7 +45,9 @@ class Engine extends AbstractEngine
     }
 
     /**
-     * {@inheritDoc}
+     * @param EloquentCollection $models
+     *
+     * @return void
      */
     public function update($models)
     {
@@ -78,7 +62,9 @@ class Engine extends AbstractEngine
     }
 
     /**
-     * {@inheritDoc}
+     * @param EloquentCollection $models
+     *
+     * @return void
      */
     public function delete($models)
     {
@@ -87,16 +73,13 @@ class Engine extends AbstractEngine
         }
 
         $index = $models->first()->searchableAs();
-
-        $documentIds = $models->map(static function (Model $model) {
-            return (string)$model->getScoutKey();
-        })->all();
+        $documentIds = $models->map(static fn (Model $model) => (string)$model->getScoutKey())->all();
 
         $this->documentManager->delete($index, $documentIds, $this->refreshDocuments);
     }
 
     /**
-     * {@inheritDoc}
+     * @return SearchResult
      */
     public function search(Builder $builder)
     {
@@ -107,7 +90,10 @@ class Engine extends AbstractEngine
     }
 
     /**
-     * {@inheritDoc}
+     * @param int $perPage
+     * @param int $page
+     *
+     * @return SearchResult
      */
     public function paginate(Builder $builder, $perPage, $page)
     {
@@ -122,22 +108,16 @@ class Engine extends AbstractEngine
     }
 
     /**
-     * Pluck and return the primary keys of the given results.
-     *
      * @param SearchResult $results
      *
      * @return BaseCollection
      */
     public function mapIds($results)
     {
-        return $results->hits()->map(static function (Hit $hit) {
-            return $hit->document()->id();
-        });
+        return $results->hits()->map(static fn (Hit $hit) => $hit->document()->id());
     }
 
     /**
-     * Map the given results to instances of the given model.
-     *
      * @param SearchResult $results
      * @param Model        $model
      *
@@ -160,8 +140,6 @@ class Engine extends AbstractEngine
     }
 
     /**
-     * Get the total count from a raw result returned by the engine.
-     *
      * @param SearchResult $results
      *
      * @return int|null
@@ -172,7 +150,7 @@ class Engine extends AbstractEngine
     }
 
     /**
-     * {@inheritDoc}
+     * @param Model $model
      */
     public function flush($model)
     {
@@ -183,7 +161,9 @@ class Engine extends AbstractEngine
     }
 
     /**
-     * {@inheritDoc}
+     * @param string $name
+     *
+     * @return void
      */
     public function createIndex($name, array $options = [])
     {
@@ -195,7 +175,9 @@ class Engine extends AbstractEngine
     }
 
     /**
-     * {@inheritDoc}
+     * @param string $name
+     *
+     * @return void
      */
     public function deleteIndex($name)
     {

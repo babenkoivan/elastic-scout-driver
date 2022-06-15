@@ -58,18 +58,14 @@ class SearchParametersFactory implements SearchParametersFactoryInterface
 
     protected function makeFilter(Builder $builder): ?array
     {
-        $filter = collect($builder->wheres)->map(static function ($value, string $field) {
-            return [
-                'term' => [$field => $value],
-            ];
-        })->values();
+        $filter = collect($builder->wheres)->map(static fn ($value, string $field) => [
+            'term' => [$field => $value],
+        ])->values();
 
         if (property_exists($builder, 'whereIns')) {
-            $whereIns = collect($builder->whereIns)->map(static function (array $values, string $field) {
-                return [
-                    'terms' => [$field => $values],
-                ];
-            })->values();
+            $whereIns = collect($builder->whereIns)->map(static fn (array $values, string $field) => [
+                'terms' => [$field => $values],
+            ])->values();
 
             $filter = $filter->merge($whereIns);
         }
@@ -79,11 +75,9 @@ class SearchParametersFactory implements SearchParametersFactoryInterface
 
     protected function makeSort(Builder $builder): ?array
     {
-        $sort = collect($builder->orders)->map(static function (array $order) {
-            return [
-                $order['column'] => $order['direction'],
-            ];
-        });
+        $sort = collect($builder->orders)->map(static fn (array $order) => [
+            $order['column'] => $order['direction'],
+        ]);
 
         return $sort->isEmpty() ? null : $sort->all();
     }

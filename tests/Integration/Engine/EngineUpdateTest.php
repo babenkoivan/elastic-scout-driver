@@ -4,15 +4,12 @@ namespace Elastic\ScoutDriver\Tests\Integration\Engine;
 
 use Elastic\Adapter\Documents\DocumentManager;
 use Elastic\Adapter\Indices\IndexManager;
-use Elastic\Adapter\Search\Hit;
-use Elastic\Adapter\Search\SearchParameters;
 use Elastic\ScoutDriver\Engine;
 use Elastic\ScoutDriver\Factories\DocumentFactoryInterface;
 use Elastic\ScoutDriver\Factories\ModelFactoryInterface;
 use Elastic\ScoutDriver\Factories\SearchParametersFactoryInterface;
 use Elastic\ScoutDriver\Tests\App\Client;
 use Elastic\ScoutDriver\Tests\Integration\TestCase;
-use stdClass;
 
 /**
  * @covers \Elastic\ScoutDriver\Engine
@@ -21,18 +18,6 @@ use stdClass;
  */
 final class EngineUpdateTest extends TestCase
 {
-    /**
-     * @var DocumentManager
-     */
-    private $documentManager;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->documentManager = resolve(DocumentManager::class);
-    }
-
     public function test_empty_model_collection_can_not_be_indexed(): void
     {
         $documentManager = $this->createMock(DocumentManager::class);
@@ -51,36 +36,12 @@ final class EngineUpdateTest extends TestCase
 
     public function test_not_empty_model_collection_can_be_indexed(): void
     {
-        $clients = factory(Client::class, rand(2, 10))->create();
+        $source = factory(Client::class, rand(2, 10))->create();
+        $found = Client::search()->get();
 
-        $searchParameters = (new SearchParameters())->query(['match_all' => new stdClass()]);
-        $searchResult = $this->documentManager->search($clients->first()->searchableAs(), $searchParameters);
-
-        // assert that the amount of created models corresponds number of found documents
-        $this->assertSame($clients->count(), $searchResult->total());
-
-        // assert that the same model ids are in the index
-        $clientIds = $clients->pluck($clients->first()->getKeyName())->all();
-
-        $documentIds = $searchResult->hits()->map(static function (Hit $hit) {
-            return $hit->document()->id();
-        })->all();
-
-        $this->assertEquals($clientIds, $documentIds);
-    }
-
-    public function test_metadata_is_indexed_when_soft_deletes_are_enabled(): void
-    {
-        // enable soft deletes
-        $this->config->set('scout.soft_delete', true);
-
-        $clients = factory(Client::class, rand(2, 10))->create();
-
-        $searchParameters = (new SearchParameters())->query(['match_all' => new stdClass()]);
-        $searchResult = $this->documentManager->search($clients->first()->searchableAs(), $searchParameters);
-
-        $searchResult->hits()->each(function (Hit $hit) {
-            $this->assertSame(0, $hit->document()->content('__soft_deleted'));
-        });
+        // assert that the amount of created models corresponds number of found models
+        $this->assertSame($source->count(), $found->count());
+        // assert that all source models are found
+        $this->assertCount(0, $source->pluck('id')->diff($found->pluck('id')));
     }
 }

@@ -17,10 +17,7 @@ use Laravel\Scout\Searchable;
  */
 final class ModelFactoryTest extends TestCase
 {
-    /**
-     * @var ModelFactory
-     */
-    private $modelFactory;
+    private ModelFactory $modelFactory;
 
     protected function setUp(): void
     {
@@ -67,12 +64,10 @@ final class ModelFactoryTest extends TestCase
      */
     public function test_model_collection_can_be_made_from_not_empty_search_result(string $factoryMethod): void
     {
-        $clients = collect([
+        $source = collect([
             ['id' => 1, 'name' => 'John'],
             ['id' => 2, 'name' => 'Martin'],
-        ])->map(static function (array $fields) {
-            return factory(Client::class)->create($fields);
-        });
+        ])->map(static fn (array $fields) => factory(Client::class)->create($fields));
 
         $builder = new Builder(new Client(), 'test');
 
@@ -89,8 +84,8 @@ final class ModelFactoryTest extends TestCase
 
         $models = $this->modelFactory->$factoryMethod($searchResult, $builder);
 
-        $this->assertCount($clients->count(), $models);
-        $this->assertEquals($clients->last()->toArray(), $models->first()->toArray());
-        $this->assertEquals($clients->first()->toArray(), $models->last()->toArray());
+        $this->assertCount($source->count(), $models);
+        $this->assertEquals($source->last()->toArray(), $models->first()->toArray());
+        $this->assertEquals($source->first()->toArray(), $models->last()->toArray());
     }
 }
