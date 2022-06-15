@@ -70,15 +70,15 @@ If you want to use Elastic Scout Driver with [Lumen framework](https://lumen.lar
 
 ## Configuration
 
-Elastic Scout Driver uses [babenkoivan/elastic-client](https://github.com/babenkoivan/elastic-client) as a dependency. 
-If you want to change the default client settings (and I'm pretty sure you do), then you need to create the configuration file first:
+Elastic Scout Driver uses [babenkoivan/elastic-client](https://github.com/babenkoivan/elastic-client) as a dependency.
+To change the client settings you need to publish the configuration file first:
 
 ```bash
-php artisan vendor:publish --provider="ElasticClient\ServiceProvider"
+php artisan vendor:publish --provider="Elastic\Client\ServiceProvider"
 ```
 
-You can change Elasticsearch host and the other client settings in the `config/elastic.client.php` file. 
-Please refer to [babenkoivan/elastic-client](https://github.com/babenkoivan/elastic-client) for more details.
+In the newly created `config/elastic.client.php` file you can define the default connection name using configuration hashes. 
+Please, refer to the [elastic-client documentation](https://github.com/babenkoivan/elastic-client) for more details.
 
 Elastic Scout Driver itself has only one configuration option at the moment - `refresh_documents`. 
 If it's set to `true` (`false` by default) documents are indexed immediately, which might be handy for testing.   
@@ -139,9 +139,9 @@ public function shouldBeSearchable()
     return count($this->toSearchableArray()) > 0;
 }
 ```
-* Raw search returns an instance of `SearchResponse` class (see [Elastic Adapter](https://github.com/babenkoivan/elastic-adapter#search)):
+* Raw search returns an instance of `SearchResult` class (see [Elastic Adapter](https://github.com/babenkoivan/elastic-adapter#search)):
 ```php
-$searchResponse = App\Order::search('Star Trek')->raw();
+$searchResult = App\Order::search('Star Trek')->raw();
 ``` 
 * To be compatible with other drivers and to not expose internal implementation of the engine, Elastic driver ignores callback
 parameter of the `search` method:
