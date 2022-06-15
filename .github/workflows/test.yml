@@ -13,13 +13,13 @@ jobs:
             scout: 7.0
             testbench: 5.0
             phpunit: 9.5
-            elastic-search: 7.10.1
+            elastic-search: 8.0.0
 
           - php: 8.0
             scout: 8.0
             testbench: 6.0
             phpunit: 9.5
-            elastic-search: 8.0.0
+            elastic-search: 8.1.0
 
           - php: 8.1
             scout: 9.0
