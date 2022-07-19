@@ -15,6 +15,8 @@ use Elastic\ScoutDriver\Tests\Integration\TestCase;
  * @covers \Elastic\ScoutDriver\Engine
  *
  * @uses   \Elastic\ScoutDriver\Factories\DocumentFactory
+ * @uses   \Elastic\ScoutDriver\Factories\ModelFactory
+ * @uses   \Elastic\ScoutDriver\Factories\SearchParametersFactory
  */
 final class EngineUpdateTest extends TestCase
 {

@@ -83,10 +83,8 @@ class Engine extends AbstractEngine
      */
     public function search(Builder $builder)
     {
-        $index = $builder->index ?: $builder->model->searchableAs();
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);
-
-        return $this->documentManager->search($index, $searchParameters);
+        return $this->documentManager->search($searchParameters);
     }
 
     /**
@@ -97,14 +95,12 @@ class Engine extends AbstractEngine
      */
     public function paginate(Builder $builder, $perPage, $page)
     {
-        $index = $builder->index ?: $builder->model->searchableAs();
-
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder, [
             'perPage' => (int)$perPage,
             'page' => (int)$page,
         ]);
 
-        return $this->documentManager->search($index, $searchParameters);
+        return $this->documentManager->search($searchParameters);
     }
 
     /**

@@ -12,9 +12,11 @@ class SearchParametersFactory implements SearchParametersFactoryInterface
     {
         $searchParameters = new SearchParameters();
 
-        if ($query = $this->makeQuery($builder)) {
-            $searchParameters->query($query);
-        }
+        $index = $this->makeIndex($builder);
+        $searchParameters->index($index);
+
+        $query = $this->makeQuery($builder);
+        $searchParameters->query($query);
 
         if ($sort = $this->makeSort($builder)) {
             $searchParameters->sort($sort);
@@ -29,6 +31,11 @@ class SearchParametersFactory implements SearchParametersFactoryInterface
         }
 
         return $searchParameters;
+    }
+
+    protected function makeIndex(Builder $builder): string
+    {
+        return $builder->index ?: $builder->model->searchableAs();
     }
 
     protected function makeQuery(Builder $builder): array

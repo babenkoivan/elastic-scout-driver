@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  * @covers \Elastic\ScoutDriver\Engine
  *
  * @uses   \Elastic\ScoutDriver\Factories\DocumentFactory
+ * @uses   \Elastic\ScoutDriver\Factories\ModelFactory
+ * @uses   \Elastic\ScoutDriver\Factories\SearchParametersFactory
  */
 final class EngineDeleteTest extends TestCase
 {

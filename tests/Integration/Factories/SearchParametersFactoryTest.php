@@ -24,10 +24,12 @@ final class SearchParametersFactoryTest extends TestCase
 
     public function test_search_parameters_can_be_made_from_builder_with_empty_query_string(): void
     {
-        $builder = new Builder(new Client(), '');
+        $model = new Client();
+        $builder = new Builder($model, '');
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);
 
         $this->assertEquals([
+            'index' => $model->searchableAs(),
             'body' => [
                 'query' => [
                     'bool' => [
@@ -42,10 +44,12 @@ final class SearchParametersFactoryTest extends TestCase
 
     public function test_search_parameters_can_be_made_from_builder_with_not_empty_query_string(): void
     {
-        $builder = new Builder(new Client(), 'foo');
+        $model = new Client();
+        $builder = new Builder($model, 'foo');
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);
 
         $this->assertSame([
+            'index' => $model->searchableAs(),
             'body' => [
                 'query' => [
                     'bool' => [
@@ -60,10 +64,12 @@ final class SearchParametersFactoryTest extends TestCase
 
     public function test_search_parameters_can_be_made_from_builder_with_where_filter(): void
     {
-        $builder = (new Builder(new Client(), 'book'))->where('price', 60);
+        $model = new Client();
+        $builder = (new Builder($model, 'book'))->where('price', 60);
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);
 
         $this->assertSame([
+            'index' => $model->searchableAs(),
             'body' => [
                 'query' => [
                     'bool' => [
@@ -85,10 +91,12 @@ final class SearchParametersFactoryTest extends TestCase
             $this->markTestSkipped('Method "whereIn" is not supported by current Scout version');
         }
 
-        $builder = (new Builder(new Client(), 'book'))->whereIn('author_id', [1, 2]);
+        $model = new Client();
+        $builder = (new Builder($model, 'book'))->whereIn('author_id', [1, 2]);
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);
 
         $this->assertSame([
+            'index' => $model->searchableAs(),
             'body' => [
                 'query' => [
                     'bool' => [
@@ -106,13 +114,15 @@ final class SearchParametersFactoryTest extends TestCase
 
     public function test_search_parameters_can_be_made_from_builder_with_sort(): void
     {
-        $builder = new Builder(new Client(), 'book');
+        $model = new Client();
+        $builder = new Builder($model, 'book');
         $builder->orderBy('price');
         $builder->orderBy('author_id', 'desc');
 
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);
 
         $this->assertSame([
+            'index' => $model->searchableAs(),
             'body' => [
                 'query' => [
                     'bool' => [
@@ -131,12 +141,14 @@ final class SearchParametersFactoryTest extends TestCase
 
     public function test_search_parameters_can_be_made_from_builder_with_limit(): void
     {
-        $builder = new Builder(new Client(), 'book');
+        $model = new Client();
+        $builder = new Builder($model, 'book');
         $builder->take(10);
 
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);
 
         $this->assertSame([
+            'index' => $model->searchableAs(),
             'body' => [
                 'query' => [
                     'bool' => [
@@ -152,12 +164,14 @@ final class SearchParametersFactoryTest extends TestCase
 
     public function test_search_parameters_can_be_made_from_builder_with_pagination(): void
     {
-        $builder = new Builder(new Client(), 'book');
+        $model = new Client();
+        $builder = new Builder($model, 'book');
         $builder->take(10);
 
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder, ['page' => 3, 'perPage' => 30]);
 
         $this->assertSame([
+            'index' => $model->searchableAs(),
             'body' => [
                 'query' => [
                     'bool' => [
