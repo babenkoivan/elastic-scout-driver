@@ -13,7 +13,7 @@ class SearchParametersFactory implements SearchParametersFactoryInterface
         $searchParameters = new SearchParameters();
 
         $index = $this->makeIndex($builder);
-        $searchParameters->index($index);
+        $searchParameters->indices([$index]);
 
         $query = $this->makeQuery($builder);
         $searchParameters->query($query);
