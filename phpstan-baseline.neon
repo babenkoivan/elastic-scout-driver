@@ -6,11 +6,6 @@ parameters:
 			path: src/Engine.php
 
 		-
-			message: "#^Property Elastic\\\\ScoutDriver\\\\Engine\\:\\:\\$refreshDocuments \\(bool\\) does not accept mixed\\.$#"
-			count: 1
-			path: src/Engine.php
-
-		-
 			message: "#^Cannot call method extend\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/ServiceProvider.php
