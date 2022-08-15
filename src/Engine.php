@@ -35,7 +35,7 @@ class Engine extends AbstractEngine
         ModelFactoryInterface $modelFactory,
         IndexManager $indexManager
     ) {
-        $this->refreshDocuments = config('elastic.scout_driver.refresh_documents');
+        $this->refreshDocuments = (bool)config('elastic.scout_driver.refresh_documents');
 
         $this->documentManager = $documentManager;
         $this->documentFactory = $documentFactory;
