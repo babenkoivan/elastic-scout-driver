@@ -40,6 +40,7 @@ final class ModelFactoryTest extends TestCase
 
     /**
      * @dataProvider factoryMethodProvider
+     *
      * @testdox Test empty model collection is made from empty search response using $factoryMethod
      */
     public function test_empty_model_collection_is_made_from_empty_search_result(string $factoryMethod): void
@@ -60,6 +61,7 @@ final class ModelFactoryTest extends TestCase
 
     /**
      * @dataProvider factoryMethodProvider
+     *
      * @testdox Test empty model collection can be made from not empty search response using $factoryMethod
      */
     public function test_model_collection_can_be_made_from_not_empty_search_result(string $factoryMethod): void
