@@ -77,6 +77,18 @@ class SearchParametersFactory implements SearchParametersFactoryInterface
             $filter = $filter->merge($whereIns);
         }
 
+        if (property_exists($builder, 'whereNotIns')) {
+            $whereNotIns = collect($builder->whereNotIns)->map(static fn (array $values, string $field) => [
+                'terms' => [$field => $values],
+            ])->values();
+
+            $filter = $filter->merge([[
+                'bool' => [
+                    'must_not' => $whereNotIns
+                ]
+            ]]);
+        }
+
         return $filter->isEmpty() ? null : $filter->all();
     }
 
