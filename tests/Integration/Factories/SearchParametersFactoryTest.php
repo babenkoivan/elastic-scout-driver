@@ -85,7 +85,7 @@ final class SearchParametersFactoryTest extends TestCase
         ], $searchParameters->toArray());
     }
 
-    public function test_search_parameters_can_be_made_from_builder_with_wherein_filter(): void
+    public function test_search_parameters_can_be_made_from_builder_with_where_in_filter(): void
     {
         if (!method_exists(Builder::class, 'whereIn')) {
             $this->markTestSkipped('Method "whereIn" is not supported by current Scout version');
@@ -104,7 +104,46 @@ final class SearchParametersFactoryTest extends TestCase
                             'query_string' => ['query' => 'book'],
                         ],
                         'filter' => [
-                            ['terms' => ['author_id' => [1, 2]]],
+                            [
+                                'bool' => [
+                                    'must' => [
+                                        ['terms' => ['author_id' => [1, 2]]],
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], $searchParameters->toArray());
+    }
+
+    public function test_search_parameters_can_be_made_from_builder_with_where_not_in_filter(): void
+    {
+        if (!method_exists(Builder::class, 'whereNotIn')) {
+            $this->markTestSkipped('Method "whereNotIn" is not supported by current Scout version');
+        }
+
+        $model = new Client();
+        $builder = (new Builder($model, 'book'))->whereNotIn('author_id', [1, 2]);
+        $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);
+
+        $this->assertSame([
+            'index' => $model->searchableAs(),
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            'query_string' => ['query' => 'book'],
+                        ],
+                        'filter' => [
+                            [
+                                'bool' => [
+                                    'must_not' => [
+                                        ['terms' => ['author_id' => [1, 2]]],
+                                    ],
+                                ],
+                            ],
                         ],
                     ],
                 ],
