@@ -9,7 +9,6 @@ use Elastic\ScoutDriver\Factories\ModelFactory;
 use Elastic\ScoutDriver\Tests\App\Client;
 use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Laravel\Scout\Builder;
-use Laravel\Scout\Searchable;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\TestDox;
