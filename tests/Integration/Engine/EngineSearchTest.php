@@ -64,7 +64,7 @@ final class EngineSearchTest extends TestCase
         $this->assertEquals($target->toArray(), $found->first()->toArray());
     }
 
-    public function test_search_result_can_be_filtered_with_wherein_clause(): void
+    public function test_search_result_can_be_filtered_with_where_in_clause(): void
     {
         if (!method_exists(Builder::class, 'whereIn')) {
             $this->markTestSkipped('Method "whereIn" is not supported by current Scout version');
@@ -75,6 +75,22 @@ final class EngineSearchTest extends TestCase
 
         $target = factory(Client::class)->create(['email' => 'foo@test.com']);
         $found = Client::search()->whereIn('email', ['foo@test.com', 'bar@test.com'])->get();
+
+        $this->assertCount(1, $found);
+        $this->assertEquals($target->toArray(), $found->first()->toArray());
+    }
+
+    public function test_search_result_can_be_filtered_with_where_not_in_clause(): void
+    {
+        if (!method_exists(Builder::class, 'whereNotIn')) {
+            $this->markTestSkipped('Method "whereNotIn" is not supported by current Scout version');
+        }
+
+        // add some mixins
+        factory(Client::class, rand(2, 10))->create(['email' => 'foo@test.com']);
+
+        $target = factory(Client::class)->create(['email' => 'bar@test.com']);
+        $found = Client::search()->whereNotIn('email', ['foo@test.com'])->get();
 
         $this->assertCount(1, $found);
         $this->assertEquals($target->toArray(), $found->first()->toArray());
