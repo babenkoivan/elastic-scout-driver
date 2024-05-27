@@ -66,10 +66,6 @@ final class EngineSearchTest extends TestCase
 
     public function test_search_result_can_be_filtered_with_where_in_clause(): void
     {
-        if (!method_exists(Builder::class, 'whereIn')) {
-            $this->markTestSkipped('Method "whereIn" is not supported by current Scout version');
-        }
-
         // add some mixins
         factory(Client::class, rand(2, 10))->create();
 
@@ -82,10 +78,6 @@ final class EngineSearchTest extends TestCase
 
     public function test_search_result_can_be_filtered_with_where_not_in_clause(): void
     {
-        if (!method_exists(Builder::class, 'whereNotIn')) {
-            $this->markTestSkipped('Method "whereNotIn" is not supported by current Scout version');
-        }
-
         // add some mixins
         factory(Client::class, rand(2, 10))->create(['email' => 'foo@test.com']);
 

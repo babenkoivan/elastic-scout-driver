@@ -69,32 +69,28 @@ class SearchParametersFactory implements SearchParametersFactoryInterface
             'term' => [$field => $value],
         ])->values();
 
-        if (property_exists($builder, 'whereIns')) {
-            $whereIns = collect($builder->whereIns)->map(static fn (array $values, string $field) => [
-                'terms' => [$field => $values],
-            ])->values();
+        $whereIns = collect($builder->whereIns)->map(static fn (array $values, string $field) => [
+            'terms' => [$field => $values],
+        ])->values();
 
-            if ($whereIns->isNotEmpty()) {
-                $filter->push([
-                    'bool' => [
-                        'must' => $whereIns->all(),
-                    ],
-                ]);
-            }
+        if ($whereIns->isNotEmpty()) {
+            $filter->push([
+                'bool' => [
+                    'must' => $whereIns->all(),
+                ],
+            ]);
         }
 
-        if (property_exists($builder, 'whereNotIns')) {
-            $whereNotIns = collect($builder->whereNotIns)->map(static fn (array $values, string $field) => [
-                'terms' => [$field => $values],
-            ])->values();
+        $whereNotIns = collect($builder->whereNotIns)->map(static fn (array $values, string $field) => [
+            'terms' => [$field => $values],
+        ])->values();
 
-            if ($whereNotIns->isNotEmpty()) {
-                $filter->push([
-                    'bool' => [
-                        'must_not' => $whereNotIns->all(),
-                    ],
-                ]);
-            }
+        if ($whereNotIns->isNotEmpty()) {
+            $filter->push([
+                'bool' => [
+                    'must_not' => $whereNotIns->all(),
+                ],
+            ]);
         }
 
         return $filter->isEmpty() ? null : $filter->all();
