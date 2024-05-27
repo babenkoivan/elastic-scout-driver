@@ -6,11 +6,10 @@ use Elastic\ScoutDriver\Factories\SearchParametersFactory;
 use Elastic\ScoutDriver\Tests\App\Client;
 use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Laravel\Scout\Builder;
+use PHPUnit\Framework\Attributes\CoversClass;
 use stdClass;
 
-/**
- * @covers \Elastic\ScoutDriver\Factories\SearchParametersFactory
- */
+#[CoversClass(SearchParametersFactory::class)]
 final class SearchParametersFactoryTest extends TestCase
 {
     private SearchParametersFactory $searchParametersFactory;

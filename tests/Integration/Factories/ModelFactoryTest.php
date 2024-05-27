@@ -3,18 +3,21 @@
 namespace Elastic\ScoutDriver\Tests\Integration\Factories;
 
 use Elastic\Adapter\Search\SearchResult;
+use Elastic\ScoutDriver\Engine;
+use Elastic\ScoutDriver\Factories\DocumentFactory;
 use Elastic\ScoutDriver\Factories\ModelFactory;
 use Elastic\ScoutDriver\Tests\App\Client;
 use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Searchable;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\TestDox;
+use PHPUnit\Framework\Attributes\UsesClass;
 
-/**
- * @covers \Elastic\ScoutDriver\Factories\ModelFactory
- *
- * @uses   \Elastic\ScoutDriver\Engine
- * @uses   \Elastic\ScoutDriver\Factories\DocumentFactory
- */
+#[CoversClass(ModelFactory::class)]
+#[UsesClass(Engine::class)]
+#[UsesClass(DocumentFactory::class)]
 final class ModelFactoryTest extends TestCase
 {
     private ModelFactory $modelFactory;
@@ -26,23 +29,16 @@ final class ModelFactoryTest extends TestCase
         $this->modelFactory = new ModelFactory();
     }
 
-    public function factoryMethodProvider(): array
+    public static function factoryMethodProvider(): array
     {
-        $methods = [['makeFromSearchResult']];
-
-        // this method doesn't exist in Scout below v9
-        if (method_exists(Searchable::class, 'queryScoutModelsByIds')) {
-            $methods[] = ['makeLazyFromSearchResult'];
-        }
-
-        return $methods;
+        return [
+            ['makeFromSearchResult'],
+            ['makeLazyFromSearchResult'],
+        ];
     }
 
-    /**
-     * @dataProvider factoryMethodProvider
-     *
-     * @testdox Test empty model collection is made from empty search response using $factoryMethod
-     */
+    #[DataProvider('factoryMethodProvider')]
+    #[TestDox('Test empty model collection is made from empty search response using $factoryMethod')]
     public function test_empty_model_collection_is_made_from_empty_search_result(string $factoryMethod): void
     {
         $builder = new Builder(new Client(), 'test');
@@ -59,11 +55,8 @@ final class ModelFactoryTest extends TestCase
         $this->assertTrue($models->isEmpty());
     }
 
-    /**
-     * @dataProvider factoryMethodProvider
-     *
-     * @testdox Test empty model collection can be made from not empty search response using $factoryMethod
-     */
+    #[DataProvider('factoryMethodProvider')]
+    #[TestDox('Test empty model collection can be made from not empty search response using $factoryMethod')]
     public function test_model_collection_can_be_made_from_not_empty_search_result(string $factoryMethod): void
     {
         $source = collect([

@@ -3,19 +3,22 @@
 namespace Elastic\ScoutDriver\Tests\Integration\Engine;
 
 use Elastic\Adapter\Search\SearchResult;
+use Elastic\ScoutDriver\Engine;
+use Elastic\ScoutDriver\Factories\DocumentFactory;
+use Elastic\ScoutDriver\Factories\ModelFactory;
+use Elastic\ScoutDriver\Factories\SearchParametersFactory;
 use Elastic\ScoutDriver\Tests\App\Client;
 use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Laravel\Scout\Builder;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use Throwable;
 
-/**
- * @covers \Elastic\ScoutDriver\Engine
- *
- * @uses   \Elastic\ScoutDriver\Factories\DocumentFactory
- * @uses   \Elastic\ScoutDriver\Factories\ModelFactory
- * @uses   \Elastic\ScoutDriver\Factories\SearchParametersFactory
- */
+#[CoversClass(Engine::class)]
+#[UsesClass(DocumentFactory::class)]
+#[UsesClass(ModelFactory::class)]
+#[UsesClass(SearchParametersFactory::class)]
 final class EngineSearchTest extends TestCase
 {
     public function test_ids_can_be_retrieved_from_search_result(): void

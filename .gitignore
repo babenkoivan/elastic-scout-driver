@@ -3,7 +3,7 @@
 /vendor
 /composer.lock
 /phpunit.xml
-/.phpunit.result.cache
+/.phpunit.cache
 /.php_cs
 /.php_cs.cache
 /.php-cs-fixer.cache

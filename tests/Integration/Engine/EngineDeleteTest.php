@@ -5,20 +5,22 @@ namespace Elastic\ScoutDriver\Tests\Integration\Engine;
 use Elastic\Adapter\Documents\DocumentManager;
 use Elastic\Adapter\Indices\IndexManager;
 use Elastic\ScoutDriver\Engine;
+use Elastic\ScoutDriver\Factories\DocumentFactory;
 use Elastic\ScoutDriver\Factories\DocumentFactoryInterface;
+use Elastic\ScoutDriver\Factories\ModelFactory;
 use Elastic\ScoutDriver\Factories\ModelFactoryInterface;
+use Elastic\ScoutDriver\Factories\SearchParametersFactory;
 use Elastic\ScoutDriver\Factories\SearchParametersFactoryInterface;
 use Elastic\ScoutDriver\Tests\App\Client;
 use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Database\Eloquent\Model;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 
-/**
- * @covers \Elastic\ScoutDriver\Engine
- *
- * @uses   \Elastic\ScoutDriver\Factories\DocumentFactory
- * @uses   \Elastic\ScoutDriver\Factories\ModelFactory
- * @uses   \Elastic\ScoutDriver\Factories\SearchParametersFactory
- */
+#[CoversClass(Engine::class)]
+#[UsesClass(DocumentFactory::class)]
+#[UsesClass(ModelFactory::class)]
+#[UsesClass(SearchParametersFactory::class)]
 final class EngineDeleteTest extends TestCase
 {
     public function test_empty_model_collection_can_not_be_deleted_from_index(): void

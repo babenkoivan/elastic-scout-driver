@@ -2,16 +2,16 @@
 
 namespace Elastic\ScoutDriver\Tests\Integration\Factories;
 
+use Elastic\ScoutDriver\Engine;
 use Elastic\ScoutDriver\Factories\DocumentFactory;
 use Elastic\ScoutDriver\Tests\App\Client;
 use Elastic\ScoutDriver\Tests\Integration\TestCase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use UnexpectedValueException;
 
-/**
- * @covers \Elastic\ScoutDriver\Factories\DocumentFactory
- *
- * @uses   \Elastic\ScoutDriver\Engine
- */
+#[CoversClass(DocumentFactory::class)]
+#[UsesClass(Engine::class)]
 final class DocumentFactoryTest extends TestCase
 {
     private DocumentFactory $documentFactory;
