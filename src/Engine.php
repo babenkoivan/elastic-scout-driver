@@ -179,4 +179,15 @@ class Engine extends AbstractEngine
     {
         $this->indexManager->drop($name);
     }
+
+    /**
+     * Force a model to be made searchable without triggering model events.
+     *
+     * @param Model $model
+     * @return void
+     */
+    public function forceSearchable(Model $model): void
+    {
+        $this->update(new EloquentCollection([$model]));
+    }
 }
