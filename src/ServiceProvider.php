@@ -53,6 +53,6 @@ final class ServiceProvider extends AbstractServiceProvider
             $this->configPath => config_path(basename($this->configPath)),
         ]);
 
-        resolve(EngineManager::class)->extend('elastic', static fn () => resolve(Engine::class));
+        resolve(EngineManager::class)->extend('elastic', fn () => resolve(Engine::class));
     }
 }

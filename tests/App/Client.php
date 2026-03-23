@@ -14,6 +14,7 @@ use Laravel\Scout\Searchable;
  * @property string $last_name
  * @property string $phone_number
  * @property string $email
+ * @property int    $age
  * @property Carbon $deleted_at
  */
 final class Client extends Model

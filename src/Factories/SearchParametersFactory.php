@@ -65,9 +65,13 @@ class SearchParametersFactory implements SearchParametersFactoryInterface
 
     protected function makeFilter(Builder $builder): ?array
     {
-        $filter = collect($builder->wheres)->map(static fn ($value, string $field) => [
-            'term' => [$field => $value],
-        ])->values();
+        $filter = collect($builder->wheres)->map(function ($where) {
+            $field = $where['field'];
+            $operator = $where['operator'];
+            $value = $where['value'];
+
+            return $this->makeWhereClause($field, $operator, $value);
+        })->values();
 
         $whereIns = collect($builder->whereIns)->map(static fn (array $values, string $field) => [
             'terms' => [$field => $values],
@@ -94,6 +98,48 @@ class SearchParametersFactory implements SearchParametersFactoryInterface
         }
 
         return $filter->isEmpty() ? null : $filter->all();
+    }
+
+    protected function makeWhereClause(
+        string $field,
+        string $operator,
+        mixed $value
+    ): array {
+        return match ($operator) {
+            '=' => [
+                'term' => [$field => $value],
+            ],
+            '!=' => [
+                'bool' => [
+                    'must_not' => [
+                        ['term' => [$field => $value]],
+                    ],
+                ],
+            ],
+            '>' => [
+                'range' => [
+                    $field => ['gt' => $value],
+                ],
+            ],
+            '>=' => [
+                'range' => [
+                    $field => ['gte' => $value],
+                ],
+            ],
+            '<' => [
+                'range' => [
+                    $field => ['lt' => $value],
+                ],
+            ],
+            '<=' => [
+                'range' => [
+                    $field => ['lte' => $value],
+                ],
+            ],
+            default => throw new \InvalidArgumentException(
+                "Unsupported operator [{$operator}] for field [{$field}]"
+            ),
+        };
     }
 
     protected function makeSort(Builder $builder): ?array

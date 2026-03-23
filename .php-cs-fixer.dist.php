@@ -6,7 +6,8 @@ use PhpCsFixer\Finder;
 $finder = Finder::create()
     ->in(__DIR__ . '/src')
     ->in(__DIR__ . '/tests')
-    ->name('*.php');
+    ->name('*.php')
+    ->notPath('ServiceProvider.php');
 
 $config = new Config();
 
@@ -79,7 +80,7 @@ return $config
         'trim_array_spaces' => true,
         'array_indentation' => true,
         'trailing_comma_in_multiline' => true,
-        'visibility_required' => true,
+        'modifier_keywords' => true,
         'yoda_style' => false,
         'use_arrow_functions' => true,
         'phpdoc_to_property_type' => true,

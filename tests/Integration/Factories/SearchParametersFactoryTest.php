@@ -7,6 +7,7 @@ use Elastic\ScoutDriver\Tests\App\Client;
 use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Laravel\Scout\Builder;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use stdClass;
 
 #[CoversClass(SearchParametersFactory::class)]
@@ -61,10 +62,47 @@ final class SearchParametersFactoryTest extends TestCase
         ], $searchParameters->toArray());
     }
 
-    public function test_search_parameters_can_be_made_from_builder_with_where_filter(): void
+    public static function whereFilterProvider(): array
+    {
+        return [
+            'equal' => [
+                '=', 60,
+                ['term' => ['price' => 60]],
+            ],
+            'not equal' => [
+                '!=', 60,
+                [
+                    'bool' => [
+                        'must_not' => [
+                            ['term' => ['price' => 60]],
+                        ],
+                    ],
+                ],
+            ],
+            'greater than' => [
+                '>', 60,
+                ['range' => ['price' => ['gt' => 60]]],
+            ],
+            'greater or equal' => [
+                '>=', 60,
+                ['range' => ['price' => ['gte' => 60]]],
+            ],
+            'less than' => [
+                '<', 60,
+                ['range' => ['price' => ['lt' => 60]]],
+            ],
+            'less or equal' => [
+                '<=', 60,
+                ['range' => ['price' => ['lte' => 60]]],
+            ],
+        ];
+    }
+
+    #[DataProvider('whereFilterProvider')]
+    public function test_search_parameters_can_be_made_from_builder_with_where_filter(string $operator, mixed $value, array $expectedFilter): void
     {
         $model = new Client();
-        $builder = (new Builder($model, 'book'))->where('price', 60);
+        $builder = (new Builder($model, 'book'))->where('price', $operator, $value);
         $searchParameters = $this->searchParametersFactory->makeFromBuilder($builder);
 
         $this->assertSame([
@@ -76,7 +114,7 @@ final class SearchParametersFactoryTest extends TestCase
                             'query_string' => ['query' => 'book'],
                         ],
                         'filter' => [
-                            ['term' => ['price' => 60]],
+                            $expectedFilter,
                         ],
                     ],
                 ],

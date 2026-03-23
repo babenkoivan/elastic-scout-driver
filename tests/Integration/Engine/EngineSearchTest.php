@@ -11,6 +11,7 @@ use Elastic\ScoutDriver\Tests\App\Client;
 use Elastic\ScoutDriver\Tests\Integration\TestCase;
 use Illuminate\Pagination\LengthAwarePaginator;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\UsesClass;
 use Throwable;
 
@@ -51,7 +52,7 @@ final class EngineSearchTest extends TestCase
         $this->assertEquals($target->toArray(), $found->first()->toArray());
     }
 
-    public function test_search_result_can_be_filtered_with_where_clause(): void
+    public function test_search_result_can_be_filtered_with_where_equal_clause(): void
     {
         // add some mixins
         factory(Client::class, rand(2, 10))->create();
@@ -61,6 +62,41 @@ final class EngineSearchTest extends TestCase
 
         $this->assertCount(1, $found);
         $this->assertEquals($target->toArray(), $found->first()->toArray());
+    }
+
+    public static function whereClauseProvider(): array
+    {
+        return [
+            'equal' => ['=', 18, [['age' => 16]], [['age' => 18]], 1],
+            'not equal' => ['!=', 16, [['age' => 16]], [['age' => 18]], 1],
+            'greater than' => ['>', 16, [['age' => 16]], [['age' => 18]], 1],
+            'greater or equal' => ['>=', 18, [['age' => 16]], [['age' => 18], ['age' => 18]], 2],
+            'less than' => ['<', 20, [['age' => 20]], [['age' => 18]], 1],
+            'less or equal' => ['<=', 18, [['age' => 20]], [['age' => 18], ['age' => 18]], 2],
+        ];
+    }
+
+    #[DataProvider('whereClauseProvider')]
+    public function test_search_result_can_be_filtered_with_where_clause(string $operator, mixed $value, array $mixins, array $targets, int $expectedCount): void
+    {
+        foreach ($mixins as $mixinData) {
+            factory(Client::class)->create($mixinData);
+        }
+
+        $targetModels = collect();
+        foreach ($targets as $targetData) {
+            $targetModels->push(factory(Client::class)->create($targetData));
+        }
+
+        $found = Client::search()
+            ->where('age', $operator, $value)
+            ->get();
+
+        $this->assertCount($expectedCount, $found);
+        $this->assertEquals(
+            $targetModels->map->toArray()->all(),
+            $found->map->toArray()->all()
+        );
     }
 
     public function test_search_result_can_be_filtered_with_where_in_clause(): void

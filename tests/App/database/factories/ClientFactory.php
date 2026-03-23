@@ -10,4 +10,5 @@ $factory->define(Client::class, static fn (Faker $faker) => [
     'last_name' => $faker->lastName,
     'phone_number' => $faker->unique()->e164PhoneNumber,
     'email' => $faker->unique()->email,
+    'age' => $faker->numberBetween(0, 100),
 ]);
